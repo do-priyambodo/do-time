@@ -107,7 +107,8 @@ export default function Pomodoro() {
   const progress = ((MODE_TIMES[mode] - timeLeft) / MODE_TIMES[mode]) * 100;
 
   return (
-    <div className="w-full max-w-2xl bg-white/80 backdrop-blur-md border border-zinc-200 rounded-2xl p-6 space-y-4 shadow-sm hover:shadow-md transition-all duration-300 mt-8">
+    <div className="w-full max-w-2xl space-y-4 mt-8">
+      <div className="bg-white/80 backdrop-blur-md border border-zinc-200 rounded-2xl p-6 space-y-4 shadow-sm hover:shadow-md transition-all duration-300">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <h2 className="text-xl font-bold text-[#1D1D1F] tracking-tight">Pomodoro</h2>
@@ -180,5 +181,6 @@ export default function Pomodoro() {
         })}
       </div>
     </div>
+  </div>
   );
 }
