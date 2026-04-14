@@ -194,18 +194,18 @@ function ReorderItem({ id }: { id: string }) {
       value={id} 
       dragControls={controls} 
       dragListener={false}
-      className="w-full flex flex-col items-center"
+      className="w-full flex items-start gap-2 max-w-3xl mx-auto"
     >
-      <div className="w-full max-w-2xl flex justify-end pr-2 -mb-5 z-20">
-        <div 
-          onPointerDown={(e) => controls.start(e)} 
-          className="cursor-grab p-1.5 bg-white/90 backdrop-blur-sm border border-zinc-200 rounded-full shadow-sm hover:shadow-md transition-all duration-300"
-          title="Drag to reorder"
-        >
-          <GripVertical className="w-4 h-4 text-zinc-400" />
-        </div>
+      <div 
+        onPointerDown={(e) => controls.start(e)} 
+        className="cursor-grab p-1.5 bg-white/90 backdrop-blur-sm border border-zinc-200 rounded-full shadow-sm hover:shadow-md transition-all duration-300 z-20 mt-10 h-fit"
+        title="Drag to reorder"
+      >
+        <GripVertical className="w-4 h-4 text-zinc-400" />
       </div>
-      {renderComponent()}
+      <div className="flex-1 w-full">
+        {renderComponent()}
+      </div>
     </Reorder.Item>
   );
 }
