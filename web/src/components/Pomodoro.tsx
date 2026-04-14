@@ -3,6 +3,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Play, Pause, SkipForward, RotateCcw, Coffee, Brain, ChevronDown, ChevronUp } from 'lucide-react';
 import { playChime } from '@/lib/utils';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 type PomodoroMode = 'focus' | 'shortBreak' | 'longBreak';
 
@@ -18,6 +24,8 @@ export default function Pomodoro() {
   const [isActive, setIsActive] = useState(false);
   const [sessionsCompleted, setSessionsCompleted] = useState(0);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
   // Reset timer when mode changes
   useEffect(() => {
@@ -37,14 +45,17 @@ export default function Pomodoro() {
       
       if (newSessions % 4 === 0) {
         setMode('longBreak');
-        alert('🎉 Great job! Time for a long break.');
+        setModalMessage('🎉 Great job! Time for a long break.');
+        setIsModalOpen(true);
       } else {
         setMode('shortBreak');
-        alert('☕ Focus session done! Take a short break.');
+        setModalMessage('☕ Focus session done! Take a short break.');
+        setIsModalOpen(true);
       }
     } else {
       setMode('focus');
-      alert('💪 Break is over! Time to focus.');
+      setModalMessage('💪 Break is over! Time to focus.');
+      setIsModalOpen(true);
     }
   }, [mode, sessionsCompleted]);
 
@@ -190,6 +201,24 @@ export default function Pomodoro() {
       </div>
         </div>
       )}
+
+      {/* Completion Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="bg-white/90 backdrop-blur-2xl border-zinc-200 max-w-md rounded-3xl text-[#1D1D1F] p-8 flex flex-col items-center space-y-6">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-center">Pomodoro</DialogTitle>
+          </DialogHeader>
+          <div className="text-center text-lg font-medium">
+            {modalMessage}
+          </div>
+          <button 
+            onClick={() => setIsModalOpen(false)}
+            className="w-full bg-zinc-900 text-white font-medium py-3 rounded-xl hover:bg-zinc-800 transition-colors"
+          >
+            Dismiss
+          </button>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

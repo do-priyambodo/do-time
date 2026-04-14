@@ -3,11 +3,18 @@
 import { useEffect, useState } from 'react';
 import { Play, Pause, RotateCcw, ChevronDown, ChevronUp } from 'lucide-react';
 import { playChime } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function Timer() {
   const [timeLeft, setTimeLeft] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
   // Input states
   const [inputHours, setInputHours] = useState('00');
@@ -22,7 +29,7 @@ export default function Timer() {
           if (prev <= 1) {
             setIsRunning(false);
             playChime();
-            setTimeout(() => alert('🔔 Timer finished!'), 0);
+            setIsModalOpen(true);
             return 0;
           }
           return prev - 1;
@@ -135,6 +142,24 @@ export default function Timer() {
           </div>
         </div>
       )}
+
+      {/* Completion Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="bg-white/90 backdrop-blur-2xl border-zinc-200 max-w-md rounded-3xl text-[#1D1D1F] p-8 flex flex-col items-center space-y-6">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-center">Timer</DialogTitle>
+          </DialogHeader>
+          <div className="text-center text-lg font-medium">
+            🔔 Timer finished!
+          </div>
+          <button 
+            onClick={() => setIsModalOpen(false)}
+            className="w-full bg-zinc-900 text-white font-medium py-3 rounded-xl hover:bg-zinc-800 transition-colors"
+          >
+            Dismiss
+          </button>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
