@@ -93,34 +93,122 @@ export default function Timer() {
               {formatTime(timeLeft)}
             </div>
           ) : (
-            <div className="flex items-center gap-2 text-4xl font-bold font-mono text-[#1D1D1F]">
+            <div className="flex items-center justify-center space-x-4 bg-zinc-50 p-4 rounded-xl border border-zinc-200">
+              {/* Hours Input */}
               <div className="flex flex-col items-center">
+                <button 
+                  onClick={() => setInputHours(prev => {
+                    const val = parseInt(prev) || 0;
+                    return val >= 23 ? '00' : (val + 1).toString().padStart(2, '0');
+                  })}
+                  className="text-zinc-400 hover:text-zinc-600"
+                >
+                  <ChevronUp className="w-5 h-5" />
+                </button>
                 <input 
                   type="text" 
                   value={inputHours} 
-                  onChange={e => setInputHours(e.target.value.replace(/\D/g, '').slice(0,2))} 
-                  className="w-16 text-center bg-zinc-100 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                  onChange={e => {
+                    const val = e.target.value.replace(/\D/g, '').slice(0,2);
+                    const num = parseInt(val);
+                    if (num >= 0 && num <= 23) setInputHours(val.padStart(2, '0'));
+                    else if (val === '') setInputHours('');
+                  }} 
+                  onBlur={() => {
+                    if (inputHours === '') setInputHours('00');
+                    else setInputHours(inputHours.padStart(2, '0'));
+                  }}
+                  className="w-12 text-center text-3xl font-bold font-mono bg-transparent text-[#1D1D1F] focus:outline-none" 
                 />
+                <button 
+                  onClick={() => setInputHours(prev => {
+                    const val = parseInt(prev) || 0;
+                    return val <= 0 ? '23' : (val - 1).toString().padStart(2, '0');
+                  })}
+                  className="text-zinc-400 hover:text-zinc-600"
+                >
+                  <ChevronDown className="w-5 h-5" />
+                </button>
                 <span className="text-xs text-zinc-500 mt-1">hours</span>
               </div>
-              <span className="mb-5">:</span>
+
+              <span className="text-3xl font-bold text-[#1D1D1F] mb-5">:</span>
+
+              {/* Minutes Input */}
               <div className="flex flex-col items-center">
+                <button 
+                  onClick={() => setInputMinutes(prev => {
+                    const val = parseInt(prev) || 0;
+                    return val >= 59 ? '00' : (val + 1).toString().padStart(2, '0');
+                  })}
+                  className="text-zinc-400 hover:text-zinc-600"
+                >
+                  <ChevronUp className="w-5 h-5" />
+                </button>
                 <input 
                   type="text" 
                   value={inputMinutes} 
-                  onChange={e => setInputMinutes(e.target.value.replace(/\D/g, '').slice(0,2))} 
-                  className="w-16 text-center bg-zinc-100 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                  onChange={e => {
+                    const val = e.target.value.replace(/\D/g, '').slice(0,2);
+                    const num = parseInt(val);
+                    if (num >= 0 && num <= 59) setInputMinutes(val.padStart(2, '0'));
+                    else if (val === '') setInputMinutes('');
+                  }} 
+                  onBlur={() => {
+                    if (inputMinutes === '') setInputMinutes('00');
+                    else setInputMinutes(inputMinutes.padStart(2, '0'));
+                  }}
+                  className="w-12 text-center text-3xl font-bold font-mono bg-transparent text-[#1D1D1F] focus:outline-none" 
                 />
+                <button 
+                  onClick={() => setInputMinutes(prev => {
+                    const val = parseInt(prev) || 0;
+                    return val <= 0 ? '59' : (val - 1).toString().padStart(2, '0');
+                  })}
+                  className="text-zinc-400 hover:text-zinc-600"
+                >
+                  <ChevronDown className="w-5 h-5" />
+                </button>
                 <span className="text-xs text-zinc-500 mt-1">min</span>
               </div>
-              <span className="mb-5">:</span>
+
+              <span className="text-3xl font-bold text-[#1D1D1F] mb-5">:</span>
+
+              {/* Seconds Input */}
               <div className="flex flex-col items-center">
+                <button 
+                  onClick={() => setInputSeconds(prev => {
+                    const val = parseInt(prev) || 0;
+                    return val >= 59 ? '00' : (val + 1).toString().padStart(2, '0');
+                  })}
+                  className="text-zinc-400 hover:text-zinc-600"
+                >
+                  <ChevronUp className="w-5 h-5" />
+                </button>
                 <input 
                   type="text" 
                   value={inputSeconds} 
-                  onChange={e => setInputSeconds(e.target.value.replace(/\D/g, '').slice(0,2))} 
-                  className="w-16 text-center bg-zinc-100 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                  onChange={e => {
+                    const val = e.target.value.replace(/\D/g, '').slice(0,2);
+                    const num = parseInt(val);
+                    if (num >= 0 && num <= 59) setInputSeconds(val.padStart(2, '0'));
+                    else if (val === '') setInputSeconds('');
+                  }} 
+                  onBlur={() => {
+                    if (inputSeconds === '') setInputSeconds('00');
+                    else setInputSeconds(inputSeconds.padStart(2, '0'));
+                  }}
+                  className="w-12 text-center text-3xl font-bold font-mono bg-transparent text-[#1D1D1F] focus:outline-none" 
                 />
+                <button 
+                  onClick={() => setInputSeconds(prev => {
+                    const val = parseInt(prev) || 0;
+                    return val <= 0 ? '59' : (val - 1).toString().padStart(2, '0');
+                  })}
+                  className="text-zinc-400 hover:text-zinc-600"
+                >
+                  <ChevronDown className="w-5 h-5" />
+                </button>
                 <span className="text-xs text-zinc-500 mt-1">sec</span>
               </div>
             </div>
