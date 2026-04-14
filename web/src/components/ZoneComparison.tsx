@@ -16,6 +16,7 @@ type ZoneItem = {
   zone?: string;
   offset?: number;
   gmt?: string;
+  countryCode?: string;
 };
 
 const INITIAL_ZONES: ZoneItem[] = [
@@ -184,6 +185,7 @@ export default function ZoneComparison() {
               <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto">
                 {citiesData
                   .filter(item => item.city.toLowerCase().includes(searchQuery.toLowerCase()))
+                  .sort((a, b) => (a.countryCode || '').localeCompare(b.countryCode || ''))
                   .map((item) => {
                     const isAdded = zones.some(z => z.zone === item.zone);
                     return (
@@ -193,7 +195,7 @@ export default function ZoneComparison() {
                         disabled={isAdded || zones.length >= 4}
                         className={`flex justify-between items-center p-3 rounded-xl text-left transition-colors ${isAdded ? 'bg-zinc-100 text-zinc-400 cursor-not-allowed' : 'hover:bg-zinc-100 text-[#1D1D1F]'}`}
                       >
-                        <span className="font-medium">{item.city}</span>
+                        <span className="font-medium">{item.countryCode} : {item.city}</span>
                         {isAdded ? (
                           <span className="text-xs text-zinc-400">Added</span>
                         ) : (
