@@ -109,7 +109,6 @@ export default function Pomodoro() {
 
   return (
     <div className="w-full max-w-2xl space-y-4 mt-8">
-      <div className="bg-white/80 backdrop-blur-md border border-zinc-200 rounded-2xl p-6 space-y-4 shadow-sm hover:shadow-md transition-all duration-300">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <h2 className="text-xl font-bold text-[#1D1D1F] tracking-tight">Pomodoro</h2>
@@ -131,7 +130,7 @@ export default function Pomodoro() {
       </div>
 
       {!isCollapsed && (
-        <>
+        <div className="bg-white/80 backdrop-blur-md border border-zinc-200 rounded-2xl p-6 space-y-4 shadow-sm hover:shadow-md transition-all duration-300">
           <div className="flex flex-col items-center justify-center py-6 space-y-4">
         {/* Timer Display */}
         <div className="text-6xl font-bold font-mono text-[#1D1D1F] tracking-tighter">
@@ -189,9 +188,8 @@ export default function Pomodoro() {
           );
         })}
       </div>
-        </>
+        </div>
       )}
-      </div>
     </div>
   );
 }
