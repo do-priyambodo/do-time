@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Play, Pause, RotateCcw, ChevronDown, ChevronUp } from 'lucide-react';
-import { playChime } from "@/lib/utils";
+import { playChime, stopChime } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-export default function Timer() {
+export default function Timer({ sound }: { sound?: string }) {
   const [timeLeft, setTimeLeft] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -25,19 +25,25 @@ export default function Timer() {
     let timer: NodeJS.Timeout;
     if (isRunning && timeLeft > 0) {
       timer = setInterval(() => {
-        setTimeLeft(prev => {
-          if (prev <= 1) {
-            setIsRunning(false);
-            playChime();
-            setIsModalOpen(true);
-            return 0;
-          }
-          return prev - 1;
-        });
+        if (timeLeft <= 1) {
+          setIsRunning(false);
+          playChime(sound);
+          setIsModalOpen(true);
+          setTimeLeft(0);
+        } else {
+          setTimeLeft(timeLeft - 1);
+        }
       }, 1000);
     }
     return () => clearInterval(timer);
-  }, [isRunning, timeLeft]);
+  }, [isRunning, timeLeft, sound]);
+
+  // Stop chime when modal closes
+  useEffect(() => {
+    if (!isModalOpen) {
+      stopChime();
+    }
+  }, [isModalOpen]);
 
   const startTimer = () => {
     if (timeLeft === 0) {
@@ -75,7 +81,7 @@ export default function Timer() {
     <div className="w-full max-w-2xl space-y-4 mt-8">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <h2 className="text-xl font-bold text-[#1D1D1F] tracking-tight">Timer</h2>
+          <h2 className="text-xl font-bold tracking-tight">Timer</h2>
           <button 
             onClick={() => setIsCollapsed(!isCollapsed)} 
             className="text-zinc-400 hover:text-zinc-600 transition-colors"

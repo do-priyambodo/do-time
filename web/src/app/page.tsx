@@ -9,6 +9,13 @@ import Timer from "@/components/Timer";
 import Stopwatch from "@/components/Stopwatch";
 import Pomodoro from "@/components/Pomodoro";
 import { ChevronDown, ChevronUp, GripVertical } from 'lucide-react';
+import { playChime, stopChime } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const INITIAL_ORDER = ['zone', 'alarm', 'pomodoro', 'timer', 'stopwatch'];
 
@@ -18,6 +25,21 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [timeOfDay, setTimeOfDay] = useState<'sunrise' | 'noon' | 'sunset' | 'night'>('noon');
   const [isManual, setIsManual] = useState(false);
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [settings, setSettings] = useState({
+    alarm: '/iphone_alarm.mp3',
+    timer: '/iphone_alarm.mp3',
+    pomodoro: '/iphone_alarm.mp3',
+  });
+  const [tempSettings, setTempSettings] = useState(settings);
+
+  const handleReset = () => {
+    localStorage.removeItem('do-time-alarms');
+    localStorage.removeItem('do-time-order');
+    localStorage.removeItem('do-time-zones');
+    window.location.reload();
+  };
 
   // Load from local storage on mount & determine time of day
   useEffect(() => {
@@ -33,6 +55,10 @@ export default function Home() {
           ...INITIAL_ORDER.filter(item => !parsedOrder.includes(item))
         ];
         setOrder(mergedOrder);
+      }
+      const savedSettings = localStorage.getItem('do-time-settings');
+      if (savedSettings) {
+        setSettings(JSON.parse(savedSettings));
       }
 
       const updateBackground = () => {
@@ -61,6 +87,14 @@ export default function Home() {
     }
   }, [order, mounted]);
 
+  useEffect(() => {
+    if (mounted) {
+      localStorage.setItem('do-time-settings', JSON.stringify(settings));
+    }
+  }, [settings, mounted]);
+
+
+
   // Avoid hydration mismatch
   if (!mounted) {
     return (
@@ -81,13 +115,13 @@ export default function Home() {
     sunrise: 'from-orange-100 via-pink-100 to-blue-200',
     noon: 'from-sky-50 via-white to-zinc-100',
     sunset: 'from-purple-100 via-rose-100 to-orange-100',
-    night: 'from-slate-900 via-indigo-950 to-zinc-900',
+    night: 'from-indigo-950 via-slate-900 to-blue-900',
   };
 
   const isNight = timeOfDay === 'night';
 
   return (
-    <div className={`relative min-h-screen flex flex-col items-center justify-center bg-gradient-to-br ${gradients[timeOfDay]} text-[#1D1D1F] font-sans py-12 transition-all duration-1000`}>
+    <div className={`relative min-h-screen flex flex-col items-center justify-center bg-gradient-to-br ${gradients[timeOfDay]} ${isNight ? 'text-white' : 'text-[#1D1D1F]'} font-sans py-12 transition-all duration-1000`}>
       {/* Subtle top line for depth */}
       <div className={`absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent ${isNight ? 'via-zinc-700' : 'via-zinc-300'} to-transparent`}></div>
       
@@ -97,7 +131,7 @@ export default function Home() {
             do-time
           </h1>
           <p className={`${isNight ? 'text-zinc-400' : 'text-zinc-600'} text-lg font-medium`}>
-            Time, refined.
+            Engineered for focus.
           </p>
         </div>
         
@@ -106,7 +140,7 @@ export default function Home() {
         {/* Reorderable Sections */}
         <Reorder.Group axis="y" values={order} onReorder={setOrder} className="w-full flex flex-col items-center space-y-4">
           {order.map((id) => (
-            <ReorderItem key={id} id={id} />
+            <ReorderItem key={id} id={id} sound={settings[id as keyof typeof settings]} />
           ))}
         </Reorder.Group>
         
@@ -126,34 +160,57 @@ export default function Home() {
 
           {!isControlsCollapsed && (
             <div className="space-y-4">
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full">
+              <div className="grid grid-cols-7 gap-2 w-full">
                 <button 
                   onClick={() => { setTimeOfDay('sunrise'); setIsManual(true); }}
-                  className={`border border-zinc-200 bg-white/80 backdrop-blur-md p-3 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center ${timeOfDay === 'sunrise' ? 'ring-2 ring-blue-500' : ''}`}
+                  className={`border border-zinc-200 bg-white/80 backdrop-blur-md p-2 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center ${timeOfDay === 'sunrise' ? 'ring-2 ring-blue-500' : ''}`}
                 >
                   <span className="text-xl mb-1">🌅</span>
                   <span className="text-xs font-medium text-[#1D1D1F]">Sunrise</span>
                 </button>
                 <button 
                   onClick={() => { setTimeOfDay('noon'); setIsManual(true); }}
-                  className={`border border-zinc-200 bg-white/80 backdrop-blur-md p-3 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center ${timeOfDay === 'noon' ? 'ring-2 ring-blue-500' : ''}`}
+                  className={`border border-zinc-200 bg-white/80 backdrop-blur-md p-2 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center ${timeOfDay === 'noon' ? 'ring-2 ring-blue-500' : ''}`}
                 >
                   <span className="text-xl mb-1">☀️</span>
                   <span className="text-xs font-medium text-[#1D1D1F]">Noon</span>
                 </button>
                 <button 
                   onClick={() => { setTimeOfDay('sunset'); setIsManual(true); }}
-                  className={`border border-zinc-200 bg-white/80 backdrop-blur-md p-3 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center ${timeOfDay === 'sunset' ? 'ring-2 ring-blue-500' : ''}`}
+                  className={`border border-zinc-200 bg-white/80 backdrop-blur-md p-2 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center ${timeOfDay === 'sunset' ? 'ring-2 ring-blue-500' : ''}`}
                 >
                   <span className="text-xl mb-1">🌆</span>
                   <span className="text-xs font-medium text-[#1D1D1F]">Sunset</span>
                 </button>
                 <button 
                   onClick={() => { setTimeOfDay('night'); setIsManual(true); }}
-                  className={`border border-zinc-200 bg-white/80 backdrop-blur-md p-3 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center ${timeOfDay === 'night' ? 'ring-2 ring-blue-500' : ''}`}
+                  className={`border border-zinc-200 bg-white/80 backdrop-blur-md p-2 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center ${timeOfDay === 'night' ? 'ring-2 ring-blue-500' : ''}`}
                 >
                   <span className="text-xl mb-1">🌙</span>
                   <span className="text-xs font-medium text-[#1D1D1F]">Night</span>
+                </button>
+                <button 
+                  onClick={() => setIsResetModalOpen(true)}
+                  className="border border-zinc-200 bg-white/80 backdrop-blur-md p-2 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center"
+                >
+                  <span className="text-xl mb-1">🔄</span>
+                  <span className="text-xs font-medium text-[#1D1D1F]">Reset</span>
+                </button>
+                <button 
+                  onClick={() => {
+                    setTempSettings(settings);
+                    setIsSettingsModalOpen(true);
+                  }}
+                  className="border border-zinc-200 bg-white/80 backdrop-blur-md p-2 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center"
+                >
+                  <span className="text-xl mb-1">⚙️</span>
+                  <span className="text-xs font-medium text-[#1D1D1F]">Setting</span>
+                </button>
+                <button 
+                  className="border border-zinc-200 bg-white/80 backdrop-blur-md p-2 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center"
+                >
+                  <span className="text-xl mb-1">ℹ️</span>
+                  <span className="text-xs font-medium text-[#1D1D1F]">About</span>
                 </button>
               </div>
               
@@ -170,20 +227,108 @@ export default function Home() {
             </div>
           )}
         </div>
+        {/* Reset Confirmation Modal */}
+        <Dialog open={isResetModalOpen} onOpenChange={setIsResetModalOpen}>
+          <DialogContent className="bg-white/90 backdrop-blur-2xl border-zinc-200 max-w-md rounded-3xl text-[#1D1D1F] p-8 flex flex-col items-center space-y-6">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold text-center">Reset to Default State?</DialogTitle>
+            </DialogHeader>
+            <div className="text-center text-zinc-600 font-medium">
+              This will return all states to Default State, which will remove all your changes.
+            </div>
+            <div className="grid grid-cols-2 gap-4 w-full mt-4">
+              <button 
+                onClick={() => setIsResetModalOpen(false)}
+                className="bg-zinc-100 text-[#1D1D1F] font-medium py-3 rounded-xl hover:bg-zinc-200 transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleReset}
+                className="bg-red-600 text-white font-medium py-3 rounded-xl hover:bg-red-700 transition-colors"
+              >
+                Reset
+              </button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Settings Modal */}
+        <Dialog open={isSettingsModalOpen} onOpenChange={setIsSettingsModalOpen}>
+          <DialogContent className="bg-white/90 backdrop-blur-2xl border-zinc-200 max-w-md rounded-3xl text-[#1D1D1F] p-8 space-y-6">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold text-center">Settings</DialogTitle>
+            </DialogHeader>
+            
+            <div className="space-y-4">
+              {['alarm', 'timer', 'pomodoro'].map((module) => (
+                <div key={module} className="flex flex-col space-y-2">
+                  <label className="text-sm font-medium capitalize">{module} Sound</label>
+                  <div className="flex gap-2">
+                    <select
+                      value={tempSettings[module as keyof typeof tempSettings]}
+                      onChange={(e) => setTempSettings({ ...tempSettings, [module]: e.target.value })}
+                      className="flex-1 bg-white/50 backdrop-blur-md border border-zinc-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#1D1D1F]"
+                    >
+                      <option value="/alarm.mp3">Alarm</option>
+                      <option value="/digital_alarm.mp3">Digital Alarm</option>
+                      <option value="/gentle_chime.mp3">Gentle Chime</option>
+                      <option value="/iphone_alarm.mp3">iPhone Alarm</option>
+                    </select>
+                    <button
+                      onClick={() => playChime(tempSettings[module as keyof typeof tempSettings])}
+                      className="bg-blue-600 text-white text-xs font-medium px-4 py-2 rounded-xl hover:bg-blue-700 transition-colors"
+                    >
+                      Test
+                    </button>
+                    <button
+                      onClick={() => stopChime()}
+                      className="bg-zinc-100 text-[#1D1D1F] text-xs font-medium px-4 py-2 rounded-xl hover:bg-zinc-200 transition-colors"
+                    >
+                      Stop
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 w-full mt-6">
+              <button 
+                onClick={() => {
+                  setIsSettingsModalOpen(false);
+                  stopChime(); // Stop any testing sound
+                }}
+                className="bg-zinc-100 text-[#1D1D1F] font-medium py-3 rounded-xl hover:bg-zinc-200 transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => {
+                  setSettings(tempSettings);
+                  setIsSettingsModalOpen(false);
+                  stopChime();
+                }}
+                className="bg-blue-600 text-white font-medium py-3 rounded-xl hover:bg-blue-700 transition-colors"
+              >
+                Save
+              </button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </main>
     </div>
   );
 }
 
-function ReorderItem({ id }: { id: string }) {
+function ReorderItem({ id, sound }: { id: string, sound?: string }) {
   const controls = useDragControls();
   
   const renderComponent = () => {
     switch (id) {
       case 'zone': return <ZoneComparison />;
-      case 'pomodoro': return <Pomodoro />;
-      case 'alarm': return <Alarm />;
-      case 'timer': return <Timer />;
+      case 'pomodoro': return <Pomodoro sound={sound} />;
+      case 'alarm': return <Alarm sound={sound} />;
+      case 'timer': return <Timer sound={sound} />;
       case 'stopwatch': return <Stopwatch />;
       default: return null;
     }

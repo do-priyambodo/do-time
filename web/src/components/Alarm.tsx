@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { playChime } from "@/lib/utils";
+import { playChime, stopChime } from "@/lib/utils";
 
 type AlarmItem = {
   id: string;
@@ -19,7 +19,24 @@ type AlarmItem = {
   repeatDays?: number[]; // 0 = Sunday, 1 = Monday, etc.
 };
 
-export default function Alarm() {
+const INITIAL_ALARMS: AlarmItem[] = [
+  {
+    id: 'morning',
+    time: '08:00',
+    label: 'Good Morning!',
+    enabled: true,
+    repeatDays: [1, 2, 3, 4, 5],
+  },
+  {
+    id: 'night',
+    time: '22:00',
+    label: 'Good Night!',
+    enabled: true,
+    repeatDays: [1, 2, 3, 4, 5],
+  },
+];
+
+export default function Alarm({ sound }: { sound?: string }) {
   const [alarms, setAlarms] = useState<AlarmItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -38,12 +55,14 @@ export default function Alarm() {
       const savedAlarms = localStorage.getItem('do-time-alarms');
       if (savedAlarms) {
         setAlarms(JSON.parse(savedAlarms));
+      } else {
+        setAlarms(INITIAL_ALARMS);
       }
     }, 0);
     return () => clearTimeout(mountTimer);
   }, []);
 
-  // 2. Check alarms every second (avoids dependency on 'alarms' by using functional update)
+  // 2. Check alarms every second
   useEffect(() => {
     if (!mounted) return;
 
@@ -53,33 +72,30 @@ export default function Alarm() {
       const currentMinutes = now.getMinutes().toString().padStart(2, '0');
       const currentSeconds = now.getSeconds();
       const currentTimeStr = `${currentHours}:${currentMinutes}`;
+      const currentDay = now.getDay();
 
-      setAlarms(prev => {
-        let triggeredAlarm: AlarmItem | undefined;
-        const currentDay = now.getDay();
+      let triggeredAlarm: AlarmItem | undefined;
+
+      const updatedAlarms = alarms.map(alarm => {
+        const isRightDay = !alarm.repeatDays || alarm.repeatDays.length === 0 || alarm.repeatDays.includes(currentDay);
         
-        const updated = prev.map(alarm => {
-          const isRightDay = !alarm.repeatDays || alarm.repeatDays.length === 0 || alarm.repeatDays.includes(currentDay);
-          
-          if (alarm.enabled && alarm.time === currentTimeStr && currentSeconds === 0 && isRightDay) {
-            triggeredAlarm = alarm;
-            const shouldDisable = !alarm.repeatDays || alarm.repeatDays.length === 0;
-            return { ...alarm, enabled: !shouldDisable };
-          }
-          return alarm;
-        });
-
-        if (triggeredAlarm) {
-          playChime();
-          setRingingAlarm(triggeredAlarm);
+        if (alarm.enabled && alarm.time === currentTimeStr && currentSeconds === 0 && isRightDay) {
+          triggeredAlarm = alarm;
+          const shouldDisable = !alarm.repeatDays || alarm.repeatDays.length === 0;
+          return { ...alarm, enabled: !shouldDisable };
         }
-
-        return updated;
+        return alarm;
       });
+
+      if (triggeredAlarm) {
+        playChime(sound);
+        setRingingAlarm(triggeredAlarm);
+        setAlarms(updatedAlarms);
+      }
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [mounted]);
+  }, [mounted, alarms, sound]);
 
   // 3. Save to local storage on change
   useEffect(() => {
@@ -88,8 +104,15 @@ export default function Alarm() {
     }
   }, [alarms, mounted]);
 
+  // Stop chime when alarm is stopped or snoozed
+  useEffect(() => {
+    if (ringingAlarm === null) {
+      stopChime();
+    }
+  }, [ringingAlarm]);
+
   const testRingingModal = () => {
-    playChime();
+    playChime(sound);
     setRingingAlarm({
       id: 'test',
       time: '12:34',
@@ -174,7 +197,7 @@ export default function Alarm() {
     return (
       <div className="w-full max-w-2xl space-y-4 mt-8 opacity-50">
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-bold text-[#1D1D1F] tracking-tight">Alarms</h2>
+          <h2 className="text-xl font-bold tracking-tight">Alarms</h2>
         </div>
         <div className="text-center text-zinc-500 text-sm py-8 border border-dashed border-zinc-300 rounded-2xl">
           Loading alarms...
@@ -187,7 +210,7 @@ export default function Alarm() {
     <div className="w-full max-w-2xl space-y-4 mt-8">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <h2 className="text-xl font-bold text-[#1D1D1F] tracking-tight">Alarms</h2>
+          <h2 className="text-xl font-bold tracking-tight">Alarms</h2>
           <button 
             onClick={() => setIsCollapsed(!isCollapsed)} 
             className="text-zinc-400 hover:text-zinc-600 transition-colors"

@@ -21,9 +21,7 @@ type ZoneItem = {
 
 const INITIAL_ZONES: ZoneItem[] = [
   { city: 'Kuala Lumpur', zone: 'Asia/Kuala_Lumpur' },
-  { city: 'Jakarta', zone: 'Asia/Jakarta' },
-  { city: 'Bangalore', zone: 'Asia/Kolkata' },
-  { city: 'California', zone: 'America/Los_Angeles' },
+  { city: 'Mountain View', zone: 'America/Los_Angeles' },
 ];
 
 export default function ZoneComparison() {
@@ -69,7 +67,7 @@ export default function ZoneComparison() {
   };
 
   const addZone = (newZone: ZoneItem) => {
-    if (zones.length < 4 && !zones.some(z => z.city === newZone.city)) {
+    if (!zones.some(z => z.city === newZone.city)) {
       setZones([...zones, newZone]);
       setIsOpen(false);
       setSearchQuery(''); // Reset search
@@ -78,7 +76,7 @@ export default function ZoneComparison() {
 
   const addCustomZone = () => {
     const offset = parseFloat(customOffset);
-    if (customCity && !isNaN(offset) && zones.length < 4) {
+    if (customCity && !isNaN(offset)) {
       setZones([...zones, { city: customCity, offset: offset }]);
       setCustomCity('');
       setCustomOffset('');
@@ -110,7 +108,7 @@ export default function ZoneComparison() {
     return (
       <div className="w-full max-w-2xl space-y-4 mt-8 opacity-50">
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-bold text-[#1D1D1F] tracking-tight">World Clock</h2>
+          <h2 className="text-xl font-bold tracking-tight">World Clock</h2>
         </div>
         <div className="text-center text-zinc-500 text-sm py-8 border border-dashed border-zinc-300 rounded-2xl">
           Loading clocks...
@@ -123,7 +121,7 @@ export default function ZoneComparison() {
     <div className="w-full max-w-2xl space-y-4 mt-8">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <h2 className="text-xl font-bold text-[#1D1D1F] tracking-tight">World Clock</h2>
+          <h2 className="text-xl font-bold tracking-tight">World Clock</h2>
           <button 
             onClick={() => setIsCollapsed(!isCollapsed)} 
             className="text-zinc-400 hover:text-zinc-600 transition-colors"
@@ -134,7 +132,7 @@ export default function ZoneComparison() {
         
         {!isCollapsed && (
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger className={`text-xs text-blue-600 font-medium hover:underline flex items-center gap-1 cursor-pointer ${zones.length >= 4 ? 'text-zinc-400 cursor-not-allowed no-underline' : ''}`}>
+            <DialogTrigger className="text-xs text-blue-600 font-medium hover:underline flex items-center gap-1 cursor-pointer">
               <Plus className="w-3 h-3" /> Add City
             </DialogTrigger>
             <DialogContent className="bg-white/90 backdrop-blur-xl border-zinc-200 max-w-md rounded-2xl text-[#1D1D1F]">
@@ -162,7 +160,7 @@ export default function ZoneComparison() {
                   />
                   <button 
                     onClick={addCustomZone}
-                    disabled={!customCity || !customOffset || zones.length >= 4}
+                    disabled={!customCity || !customOffset}
                     className="bg-blue-600 text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-blue-700 disabled:bg-zinc-300 disabled:cursor-not-allowed transition-colors"
                   >
                     Add
@@ -192,7 +190,7 @@ export default function ZoneComparison() {
                       <button
                         key={`${item.city}-${item.zone}`}
                         onClick={() => addZone(item)}
-                        disabled={isAdded || zones.length >= 4}
+                        disabled={isAdded}
                         className={`flex justify-between items-center p-3 rounded-xl text-left transition-colors ${isAdded ? 'bg-zinc-100 text-zinc-400 cursor-not-allowed' : 'hover:bg-zinc-100 text-[#1D1D1F]'}`}
                       >
                         <span className="font-medium">{item.countryCode} : {item.city}</span>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Play, Pause, SkipForward, RotateCcw, Coffee, Brain, ChevronDown, ChevronUp } from 'lucide-react';
-import { playChime } from '@/lib/utils';
+import { playChime, stopChime } from '@/lib/utils';
 import {
   Dialog,
   DialogContent,
@@ -18,7 +18,7 @@ const MODE_TIMES = {
   longBreak: 15 * 60,
 };
 
-export default function Pomodoro() {
+export default function Pomodoro({ sound }: { sound?: string }) {
   const [mode, setMode] = useState<PomodoroMode>('focus');
   const [timeLeft, setTimeLeft] = useState(MODE_TIMES[mode]);
   const [isActive, setIsActive] = useState(false);
@@ -67,8 +67,8 @@ export default function Pomodoro() {
       interval = setInterval(() => {
         setTimeLeft((prev) => prev - 1);
       }, 1000);
-    } else if (timeLeft === 0) {
-      playChime();
+    } else if (timeLeft === 0 && isActive) {
+      playChime(sound);
       setTimeout(() => {
         handlePhaseCompletion();
       }, 0);
@@ -77,7 +77,14 @@ export default function Pomodoro() {
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isActive, timeLeft, mode, handlePhaseCompletion]);
+  }, [isActive, timeLeft, mode, handlePhaseCompletion, sound]);
+
+  // Stop chime when modal closes
+  useEffect(() => {
+    if (!isModalOpen) {
+      stopChime();
+    }
+  }, [isModalOpen]);
 
 
   const toggleTimer = () => {
@@ -122,7 +129,7 @@ export default function Pomodoro() {
     <div className="w-full max-w-2xl space-y-4 mt-8">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <h2 className="text-xl font-bold text-[#1D1D1F] tracking-tight">Pomodoro</h2>
+          <h2 className="text-xl font-bold tracking-tight">Pomodoro</h2>
           <button 
             onClick={() => setIsCollapsed(!isCollapsed)} 
             className="text-zinc-400 hover:text-zinc-600 transition-colors"

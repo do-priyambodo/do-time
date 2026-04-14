@@ -41,7 +41,7 @@ export default function Stopwatch() {
     <div className="w-full max-w-2xl space-y-4 mt-8">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <h2 className="text-xl font-bold text-[#1D1D1F] tracking-tight">Stopwatch</h2>
+          <h2 className="text-xl font-bold tracking-tight">Stopwatch</h2>
           <button 
             onClick={() => setIsCollapsed(!isCollapsed)} 
             className="text-zinc-400 hover:text-zinc-600 transition-colors"
