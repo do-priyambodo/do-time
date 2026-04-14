@@ -87,6 +87,16 @@ export default function Alarm() {
     }
   }, [alarms, mounted]);
 
+  const formatRepeatDays = (days?: number[]) => {
+    if (!days || days.length === 0) return 'Once';
+    if (days.length === 7) return 'Every day';
+    if (days.length === 5 && !days.includes(0) && !days.includes(6)) return 'Weekdays';
+    if (days.length === 2 && days.includes(0) && days.includes(6)) return 'Weekends';
+    
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    return days.map(d => dayNames[d]).join(', ');
+  };
+
   const openEditModal = (alarm: AlarmItem) => {
     setEditingAlarmId(alarm.id);
     const [hours, minutes] = alarm.time.split(':');
@@ -306,7 +316,7 @@ export default function Alarm() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-[#1D1D1F] text-sm">{alarm.label || 'Alarm'}</h3>
-                  <p className="text-xs text-zinc-500 font-medium">Once</p>
+                  <p className="text-xs text-zinc-500 font-medium">{formatRepeatDays(alarm.repeatDays)}</p>
                 </div>
               </div>
               
