@@ -26,7 +26,13 @@ export default function Home() {
       setMounted(true);
       const savedOrder = localStorage.getItem('do-time-order');
       if (savedOrder) {
-        setOrder(JSON.parse(savedOrder));
+        const parsedOrder = JSON.parse(savedOrder);
+        // Ensure all items from INITIAL_ORDER are present
+        const mergedOrder = [
+          ...parsedOrder,
+          ...INITIAL_ORDER.filter(item => !parsedOrder.includes(item))
+        ];
+        setOrder(mergedOrder);
       }
 
       const updateBackground = () => {
