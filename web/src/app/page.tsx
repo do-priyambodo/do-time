@@ -27,6 +27,7 @@ export default function Home() {
   const [isManual, setIsManual] = useState(false);
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
   const [settings, setSettings] = useState({
     alarm: '/iphone_alarm.mp3',
     timer: '/iphone_alarm.mp3',
@@ -207,6 +208,7 @@ export default function Home() {
                   <span className="text-xs font-medium text-[#1D1D1F]">Setting</span>
                 </button>
                 <button 
+                  onClick={() => setIsAboutModalOpen(true)}
                   className="border border-zinc-200 bg-white/80 backdrop-blur-md p-2 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center"
                 >
                   <span className="text-xl mb-1">ℹ️</span>
@@ -311,6 +313,53 @@ export default function Home() {
                 className="bg-blue-600 text-white font-medium py-3 rounded-xl hover:bg-blue-700 transition-colors"
               >
                 Save
+              </button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* About Modal */}
+        <Dialog open={isAboutModalOpen} onOpenChange={setIsAboutModalOpen}>
+          <DialogContent className="bg-white/90 backdrop-blur-2xl border-zinc-200 max-w-md rounded-3xl text-[#1D1D1F] p-8 space-y-6 max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold text-center">About do-time</DialogTitle>
+            </DialogHeader>
+            
+            <div className="space-y-4 text-sm text-[#1D1D1F]">
+              <p className="font-medium text-center">Engineered for Focus.</p>
+              
+              <div>
+                <h3 className="font-bold text-base mb-1">🎯 Goal & Objective</h3>
+                <p>In a world full of digital noise, <code>do-time</code> aims to be your sanctuary of focus. We believe that productivity tools should be as beautiful as they are functional.</p>
+                <ul className="list-disc list-inside mt-1 space-y-1">
+                  <li>Elevate Deep Work with Pomodoro</li>
+                  <li>Aesthetic Harmony with dynamic themes</li>
+                  <li>Empower the User with full customization</li>
+                </ul>
+              </div>
+              
+              <div>
+                <h3 className="font-bold text-base mb-1">✨ Core Features</h3>
+                <ul className="list-disc list-inside space-y-1">
+                  <li><strong>Dynamic Themes</strong>: Sunrise, Noon, Sunset, and Night.</li>
+                  <li><strong>Masterful Pomodoro</strong>: Visual progress and smooth transitions.</li>
+                  <li><strong>Borderless World Clock</strong>: Compare time across the globe.</li>
+                  <li><strong>Smart Alarms</strong>: Repeatable alarms with custom labels.</li>
+                  <li><strong>Reorderable Workspace</strong>: Drag and drop modules.</li>
+                </ul>
+              </div>
+
+              <div className="text-center text-xs text-zinc-500 mt-6">
+                Made with ❤️ by <a href="https://priyambodo.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Doddi Priyambodo</a>
+              </div>
+            </div>
+
+            <div className="flex justify-center mt-6">
+              <button 
+                onClick={() => setIsAboutModalOpen(false)}
+                className="bg-zinc-100 text-[#1D1D1F] font-medium px-6 py-3 rounded-xl hover:bg-zinc-200 transition-colors"
+              >
+                Close
               </button>
             </div>
           </DialogContent>
