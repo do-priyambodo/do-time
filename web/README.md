@@ -5,6 +5,7 @@
 `do-time` is not just another timer app. It is a curated, distraction-free environment designed to help you master your focus and elevate your daily workflow. Inspired by high-end minimalist design and built with cutting-edge web technologies, it transforms time management into a visual experience.
 
 <p align="center">
+  <a href="https://dotime.priyambodo.com/"><h2>🚀 Live Demo: dotime.priyambodo.com</h2></a>
   <img src="public/screenshot2.png" width="48%" alt="do-time Workspace Top" />
   <img src="public/screenshot1.png" width="48%" alt="do-time Workspace Bottom" />
 </p>
