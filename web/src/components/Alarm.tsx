@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Plus, Minus, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, Minus, ChevronDown, ChevronUp, Bell } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -29,6 +29,7 @@ export default function Alarm() {
   const [newLabel, setNewLabel] = useState('');
   const [selectedDays, setSelectedDays] = useState<number[]>([]);
   const [editingAlarmId, setEditingAlarmId] = useState<string | null>(null);
+  const [ringingAlarm, setRingingAlarm] = useState<AlarmItem | null>(null);
 
   // 1. Load from local storage on mount
   useEffect(() => {
@@ -70,7 +71,7 @@ export default function Alarm() {
 
         if (triggeredAlarm) {
           playChime();
-          alert(`🔔 Alarm: ${triggeredAlarm.label || 'Time up!'}`);
+          setRingingAlarm(triggeredAlarm);
         }
 
         return updated;
@@ -86,6 +87,30 @@ export default function Alarm() {
       localStorage.setItem('do-time-alarms', JSON.stringify(alarms));
     }
   }, [alarms, mounted]);
+
+  const stopAlarm = () => {
+    setRingingAlarm(null);
+  };
+
+  const snoozeAlarm = () => {
+    if (!ringingAlarm) return;
+    
+    const now = new Date();
+    now.setMinutes(now.getMinutes() + 9); // Snooze for 9 mins
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const snoozedTime = `${hours}:${minutes}`;
+    
+    const id = Math.random().toString(36).substring(7);
+    setAlarms(prev => [...prev, { 
+      id, 
+      time: snoozedTime, 
+      label: `Snooze: ${ringingAlarm.label || 'Alarm'}`, 
+      enabled: true 
+    }]);
+    
+    setRingingAlarm(null);
+  };
 
   const formatRepeatDays = (days?: number[]) => {
     if (!days || days.length === 0) return 'Once';
@@ -344,6 +369,37 @@ export default function Alarm() {
           No alarms set. Click &quot;Add Alarm&quot; to set one.
         </div>
       )}
+
+      {/* Ringing Modal */}
+      <Dialog open={ringingAlarm !== null} onOpenChange={() => {}}>
+        <DialogContent className="bg-white/90 backdrop-blur-2xl border-zinc-200 max-w-md rounded-3xl text-[#1D1D1F] p-8 flex flex-col items-center space-y-6">
+          <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center animate-pulse">
+            <Bell className="w-10 h-10 text-blue-600" />
+          </div>
+          
+          <div className="text-center">
+            <h2 className="text-sm font-medium text-zinc-500 uppercase tracking-wider">Alarm</h2>
+            <h1 className="text-4xl font-bold mt-1 font-mono">{ringingAlarm?.time}</h1>
+            <p className="text-xl text-zinc-700 mt-2">{ringingAlarm?.label || 'Time to get up!'}</p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 w-full mt-4">
+            <button 
+              onClick={snoozeAlarm}
+              className="bg-zinc-100 text-[#1D1D1F] font-medium py-4 rounded-xl hover:bg-zinc-200 transition-colors flex flex-col items-center"
+            >
+              <span className="text-lg">Snooze</span>
+              <span className="text-xs text-zinc-500 mt-0.5">+9 mins</span>
+            </button>
+            <button 
+              onClick={stopAlarm}
+              className="bg-blue-600 text-white font-medium py-4 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center text-lg"
+            >
+              Stop
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
