@@ -20,24 +20,31 @@ export default function Home() {
 
   // Load from local storage on mount & determine time of day
   useEffect(() => {
-    setMounted(true);
-    const savedOrder = localStorage.getItem('do-time-order');
-    if (savedOrder) {
-      setOrder(JSON.parse(savedOrder));
-    }
+    let timer: NodeJS.Timeout;
+    const mountTimer = setTimeout(() => {
+      setMounted(true);
+      const savedOrder = localStorage.getItem('do-time-order');
+      if (savedOrder) {
+        setOrder(JSON.parse(savedOrder));
+      }
 
-    const updateBackground = () => {
-      if (isManual) return; // Skip automatic updates if user manually selected a theme
-      const hour = new Date().getHours();
-      if (hour >= 6 && hour < 9) setTimeOfDay('sunrise');
-      else if (hour >= 9 && hour < 17) setTimeOfDay('noon');
-      else if (hour >= 17 && hour < 20) setTimeOfDay('sunset');
-      else setTimeOfDay('night');
+      const updateBackground = () => {
+        if (isManual) return; // Skip automatic updates if user manually selected a theme
+        const hour = new Date().getHours();
+        if (hour >= 6 && hour < 9) setTimeOfDay('sunrise');
+        else if (hour >= 9 && hour < 17) setTimeOfDay('noon');
+        else if (hour >= 17 && hour < 20) setTimeOfDay('sunset');
+        else setTimeOfDay('night');
+      };
+      
+      updateBackground();
+      timer = setInterval(updateBackground, 60000); // Check every minute
+    }, 0);
+
+    return () => {
+      clearTimeout(mountTimer);
+      if (timer) clearInterval(timer);
     };
-    
-    updateBackground();
-    const timer = setInterval(updateBackground, 60000); // Check every minute
-    return () => clearInterval(timer);
   }, [isManual]); // Rerun effect if manual mode toggles
 
   // Save to local storage on change

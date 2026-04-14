@@ -18,12 +18,16 @@ export default function Timer() {
     let timer: NodeJS.Timeout;
     if (isRunning && timeLeft > 0) {
       timer = setInterval(() => {
-        setTimeLeft(prev => prev - 1);
+        setTimeLeft(prev => {
+          if (prev <= 1) {
+            setIsRunning(false);
+            playChime();
+            setTimeout(() => alert('🔔 Timer finished!'), 0);
+            return 0;
+          }
+          return prev - 1;
+        });
       }, 1000);
-    } else if (timeLeft === 0 && isRunning) {
-      setIsRunning(false);
-      playChime();
-      alert('🔔 Timer finished!');
     }
     return () => clearInterval(timer);
   }, [isRunning, timeLeft]);

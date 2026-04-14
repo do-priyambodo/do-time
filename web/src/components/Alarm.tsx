@@ -28,11 +28,14 @@ export default function Alarm() {
 
   // 1. Load from local storage on mount
   useEffect(() => {
-    setMounted(true);
-    const savedAlarms = localStorage.getItem('do-time-alarms');
-    if (savedAlarms) {
-      setAlarms(JSON.parse(savedAlarms));
-    }
+    const mountTimer = setTimeout(() => {
+      setMounted(true);
+      const savedAlarms = localStorage.getItem('do-time-alarms');
+      if (savedAlarms) {
+        setAlarms(JSON.parse(savedAlarms));
+      }
+    }, 0);
+    return () => clearTimeout(mountTimer);
   }, []);
 
   // 2. Check alarms every second (avoids dependency on 'alarms' by using functional update)

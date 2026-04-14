@@ -7,11 +7,14 @@ export default function Clock() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const mountTimer = setTimeout(() => setMounted(true), 0);
     const timer = setInterval(() => {
       setTime(new Date());
     }, 1000);
-    return () => clearInterval(timer);
+    return () => {
+      clearTimeout(mountTimer);
+      clearInterval(timer);
+    };
   }, []);
 
   // Avoid hydration mismatch by rendering a skeleton or placeholder until mounted

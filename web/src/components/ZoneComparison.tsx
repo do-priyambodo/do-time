@@ -39,16 +39,21 @@ export default function ZoneComparison() {
 
   // Load from local storage on mount
   useEffect(() => {
-    setMounted(true);
-    const savedZones = localStorage.getItem('do-time-zones');
-    if (savedZones) {
-      setZones(JSON.parse(savedZones));
-    }
+    const mountTimer = setTimeout(() => {
+      setMounted(true);
+      const savedZones = localStorage.getItem('do-time-zones');
+      if (savedZones) {
+        setZones(JSON.parse(savedZones));
+      }
+    }, 0);
     
     const timer = setInterval(() => {
       setTime(new Date());
     }, 1000);
-    return () => clearInterval(timer);
+    return () => {
+      clearTimeout(mountTimer);
+      clearInterval(timer);
+    };
   }, []);
 
   // Save to local storage on change
