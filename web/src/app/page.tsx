@@ -7,9 +7,10 @@ import ZoneComparison from "@/components/ZoneComparison";
 import Alarm from "@/components/Alarm";
 import Timer from "@/components/Timer";
 import Stopwatch from "@/components/Stopwatch";
+import Pomodoro from "@/components/Pomodoro";
 import { ChevronDown, ChevronUp, GripVertical } from 'lucide-react';
 
-const INITIAL_ORDER = ['zone', 'alarm', 'timer', 'stopwatch'];
+const INITIAL_ORDER = ['zone', 'pomodoro', 'alarm', 'timer', 'stopwatch'];
 
 export default function Home() {
   const [isControlsCollapsed, setIsControlsCollapsed] = useState(false);
@@ -174,6 +175,7 @@ function ReorderItem({ id }: { id: string }) {
   const renderComponent = () => {
     switch (id) {
       case 'zone': return <ZoneComparison />;
+      case 'pomodoro': return <Pomodoro />;
       case 'alarm': return <Alarm />;
       case 'timer': return <Timer />;
       case 'stopwatch': return <Stopwatch />;

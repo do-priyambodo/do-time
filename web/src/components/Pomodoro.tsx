@@ -1,0 +1,184 @@
+'use client';
+
+import { useState, useEffect, useCallback } from 'react';
+import { Play, Pause, SkipForward, RotateCcw, Coffee, Brain } from 'lucide-react';
+import { playChime } from '@/lib/utils';
+
+type PomodoroMode = 'focus' | 'shortBreak' | 'longBreak';
+
+const MODE_TIMES = {
+  focus: 25 * 60,
+  shortBreak: 5 * 60,
+  longBreak: 15 * 60,
+};
+
+export default function Pomodoro() {
+  const [mode, setMode] = useState<PomodoroMode>('focus');
+  const [timeLeft, setTimeLeft] = useState(MODE_TIMES[mode]);
+  const [isActive, setIsActive] = useState(false);
+  const [sessionsCompleted, setSessionsCompleted] = useState(0);
+
+  // Reset timer when mode changes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setTimeLeft(MODE_TIMES[mode]);
+      setIsActive(false);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [mode]);
+
+  const handlePhaseCompletion = useCallback(() => {
+    setIsActive(false);
+    
+    if (mode === 'focus') {
+      const newSessions = sessionsCompleted + 1;
+      setSessionsCompleted(newSessions);
+      
+      if (newSessions % 4 === 0) {
+        setMode('longBreak');
+        alert('🎉 Great job! Time for a long break.');
+      } else {
+        setMode('shortBreak');
+        alert('☕ Focus session done! Take a short break.');
+      }
+    } else {
+      setMode('focus');
+      alert('💪 Break is over! Time to focus.');
+    }
+  }, [mode, sessionsCompleted]);
+
+  // Timer countdown effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+
+    if (isActive && timeLeft > 0) {
+      interval = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      playChime();
+      setTimeout(() => {
+        handlePhaseCompletion();
+      }, 0);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isActive, timeLeft, mode, handlePhaseCompletion]);
+
+
+  const toggleTimer = () => {
+    setIsActive(!isActive);
+  };
+
+  const resetTimer = () => {
+    setIsActive(false);
+    setTimeLeft(MODE_TIMES[mode]);
+  };
+
+  const skipPhase = () => {
+    setIsActive(false);
+    handlePhaseCompletion();
+  };
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const secs = (seconds % 60).toString().padStart(2, '0');
+    return `${mins}:${secs}`;
+  };
+
+  const getModeColor = () => {
+    switch (mode) {
+      case 'focus': return 'text-rose-500 bg-rose-50';
+      case 'shortBreak': return 'text-emerald-500 bg-emerald-50';
+      case 'longBreak': return 'text-blue-500 bg-blue-50';
+    }
+  };
+
+  const getModeProgressColor = () => {
+    switch (mode) {
+      case 'focus': return 'bg-rose-500';
+      case 'shortBreak': return 'bg-emerald-500';
+      case 'longBreak': return 'bg-blue-500';
+    }
+  };
+
+  const progress = ((MODE_TIMES[mode] - timeLeft) / MODE_TIMES[mode]) * 100;
+
+  return (
+    <div className="w-full max-w-2xl bg-white/80 backdrop-blur-md border border-zinc-200 rounded-2xl p-6 space-y-4 shadow-sm hover:shadow-md transition-all duration-300 mt-8">
+      <div className="flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <h2 className="text-xl font-bold text-[#1D1D1F] tracking-tight">Pomodoro</h2>
+          <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${getModeColor()}`}>
+            {mode === 'focus' ? <Brain className="w-3 h-3" /> : <Coffee className="w-3 h-3" />}
+            <span className="capitalize">{mode.replace('Break', ' Break')}</span>
+          </div>
+        </div>
+        
+        <div className="text-sm text-zinc-500 font-medium">
+          Sessions: {sessionsCompleted}
+        </div>
+      </div>
+
+      <div className="flex flex-col items-center justify-center py-6 space-y-4">
+        {/* Timer Display */}
+        <div className="text-6xl font-bold font-mono text-[#1D1D1F] tracking-tighter">
+          {formatTime(timeLeft)}
+        </div>
+
+        {/* Progress Bar */}
+        <div className="w-full max-w-md h-2 bg-zinc-100 rounded-full overflow-hidden">
+          <div 
+            className={`h-full transition-all duration-500 ease-out ${getModeProgressColor()}`}
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+
+        {/* Controls */}
+        <div className="flex items-center gap-4 mt-2">
+          <button 
+            onClick={resetTimer}
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-zinc-100 text-zinc-600 hover:bg-zinc-200 transition-colors"
+            title="Reset"
+          >
+            <RotateCcw className="w-4 h-4" />
+          </button>
+          
+          <button 
+            onClick={toggleTimer}
+            className={`w-14 h-14 flex items-center justify-center rounded-full text-white shadow-md transition-transform hover:scale-105 ${isActive ? 'bg-zinc-800 hover:bg-zinc-900' : 'bg-blue-600 hover:bg-blue-700'}`}
+            title={isActive ? 'Pause' : 'Start'}
+          >
+            {isActive ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-0.5" />}
+          </button>
+
+          <button 
+            onClick={skipPhase}
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-zinc-100 text-zinc-600 hover:bg-zinc-200 transition-colors"
+            title="Skip"
+          >
+            <SkipForward className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* Session Indicators */}
+      <div className="flex justify-center gap-1.5 mt-2">
+        {[...Array(4)].map((_, index) => {
+          const sessionInCycle = sessionsCompleted % 4;
+          const isCompleted = index < sessionInCycle;
+          const isCurrent = index === sessionInCycle && mode === 'focus';
+          
+          return (
+            <div 
+              key={index}
+              className={`w-2 h-2 rounded-full transition-colors duration-300 ${isCompleted ? 'bg-rose-500' : isCurrent ? 'bg-rose-500 animate-pulse' : 'bg-zinc-200'}`}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
