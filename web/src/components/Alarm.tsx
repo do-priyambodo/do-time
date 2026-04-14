@@ -28,6 +28,7 @@ export default function Alarm() {
   const [newMinutes, setNewMinutes] = useState('00');
   const [newLabel, setNewLabel] = useState('');
   const [selectedDays, setSelectedDays] = useState<number[]>([]);
+  const [editingAlarmId, setEditingAlarmId] = useState<string | null>(null);
 
   // 1. Load from local storage on mount
   useEffect(() => {
@@ -86,6 +87,24 @@ export default function Alarm() {
     }
   }, [alarms, mounted]);
 
+  const openEditModal = (alarm: AlarmItem) => {
+    setEditingAlarmId(alarm.id);
+    const [hours, minutes] = alarm.time.split(':');
+    setNewHours(hours);
+    setNewMinutes(minutes);
+    setNewLabel(alarm.label);
+    setSelectedDays(alarm.repeatDays || []);
+    setIsOpen(true);
+  };
+
+  const updateAlarm = () => {
+    if (!editingAlarmId) return;
+    const combinedTime = `${newHours}:${newMinutes}`;
+    setAlarms(alarms.map(a => a.id === editingAlarmId ? { ...a, time: combinedTime, label: newLabel, repeatDays: selectedDays } : a));
+    setIsOpen(false);
+    setEditingAlarmId(null);
+  };
+
   const addAlarm = () => {
     const id = Math.random().toString(36).substring(7);
     const combinedTime = `${newHours}:${newMinutes}`;
@@ -134,12 +153,21 @@ export default function Alarm() {
         
         {!isCollapsed && (
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger className="text-xs text-blue-600 font-medium hover:underline flex items-center gap-1 cursor-pointer">
+            <DialogTrigger 
+              className="text-xs text-blue-600 font-medium hover:underline flex items-center gap-1 cursor-pointer"
+              onClick={() => {
+                setEditingAlarmId(null);
+                setNewHours('08');
+                setNewMinutes('00');
+                setNewLabel('');
+                setSelectedDays([]);
+              }}
+            >
               <Plus className="w-3 h-3" /> Add Alarm
             </DialogTrigger>
             <DialogContent className="bg-white/90 backdrop-blur-xl border-zinc-200 max-w-md rounded-2xl text-[#1D1D1F]">
               <DialogHeader>
-                <DialogTitle className="text-lg font-bold">Set Alarm</DialogTitle>
+                <DialogTitle className="text-lg font-bold">{editingAlarmId ? 'Edit Alarm' : 'Set Alarm'}</DialogTitle>
               </DialogHeader>
               
               <div className="space-y-4 mt-2">
@@ -257,10 +285,10 @@ export default function Alarm() {
                 </div>
 
                 <button 
-                  onClick={addAlarm}
+                  onClick={editingAlarmId ? updateAlarm : addAlarm}
                   className="w-full bg-blue-600 text-white font-medium py-3 rounded-xl hover:bg-blue-700 transition-colors"
                 >
-                  Save Alarm
+                  {editingAlarmId ? 'Update Alarm' : 'Save Alarm'}
                 </button>
               </div>
             </DialogContent>
@@ -272,7 +300,7 @@ export default function Alarm() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {alarms.map((alarm) => (
             <div key={alarm.id} className={`border border-zinc-200 bg-white/80 backdrop-blur-md p-5 rounded-2xl flex justify-between items-center shadow-sm hover:shadow-md transition-all duration-300 ${!alarm.enabled ? 'opacity-50' : ''}`}>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 cursor-pointer" onClick={() => openEditModal(alarm)}>
                 <div className="text-3xl font-bold tracking-tighter text-[#1D1D1F] font-mono">
                   {alarm.time}
                 </div>
