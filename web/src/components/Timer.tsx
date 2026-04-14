@@ -18,7 +18,7 @@ export default function Timer({ sound }: { sound?: string }) {
   
   // Input states
   const [inputHours, setInputHours] = useState('00');
-  const [inputMinutes, setInputMinutes] = useState('05');
+  const [inputMinutes, setInputMinutes] = useState('00');
   const [inputSeconds, setInputSeconds] = useState('00');
 
   useEffect(() => {
@@ -68,6 +68,9 @@ export default function Timer({ sound }: { sound?: string }) {
   const resetTimer = () => {
     setIsRunning(false);
     setTimeLeft(0);
+    setInputHours('00');
+    setInputMinutes('00');
+    setInputSeconds('00');
   };
 
   const formatTime = (secs: number) => {

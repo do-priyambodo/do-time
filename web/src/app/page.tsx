@@ -325,32 +325,46 @@ export default function Home() {
               <DialogTitle className="text-2xl font-bold text-center">About do-time</DialogTitle>
             </DialogHeader>
             
-            <div className="space-y-4 text-sm text-[#1D1D1F]">
-              <p className="font-medium text-center">Engineered for Focus.</p>
+            <div className="space-y-6 text-sm text-[#1D1D1F]">
+              <p className="text-lg font-bold text-center text-[#1D1D1F]">⏳ Engineered for Focus.</p>
               
-              <div>
-                <h3 className="font-bold text-base mb-1">🎯 Goal & Objective</h3>
-                <p>In a world full of digital noise, <code>do-time</code> aims to be your sanctuary of focus. We believe that productivity tools should be as beautiful as they are functional.</p>
-                <ul className="list-disc list-inside mt-1 space-y-1">
-                  <li>Elevate Deep Work with Pomodoro</li>
-                  <li>Aesthetic Harmony with dynamic themes</li>
-                  <li>Empower the User with full customization</li>
-                </ul>
+              <div className="text-center space-y-2">
+                <p className="text-zinc-600">In a world full of digital noise, <code>do-time</code> aims to be your sanctuary of focus. We believe that productivity tools should be as beautiful as they are functional.</p>
               </div>
               
-              <div>
-                <h3 className="font-bold text-base mb-1">✨ Core Features</h3>
-                <ul className="list-disc list-inside space-y-1">
-                  <li><strong>Dynamic Themes</strong>: Sunrise, Noon, Sunset, and Night.</li>
-                  <li><strong>Masterful Pomodoro</strong>: Visual progress and smooth transitions.</li>
-                  <li><strong>Borderless World Clock</strong>: Compare time across the globe.</li>
-                  <li><strong>Smart Alarms</strong>: Repeatable alarms with custom labels.</li>
-                  <li><strong>Reorderable Workspace</strong>: Drag and drop modules.</li>
-                </ul>
+              <div className="bg-zinc-50 p-4 rounded-2xl border border-zinc-200 space-y-3">
+                <h3 className="font-bold text-sm uppercase tracking-wider text-zinc-500 text-center mb-2">The Essentials</h3>
+                <div className="grid grid-cols-2 gap-4 text-xs">
+                  <div>
+                    <strong className="text-[#1D1D1F]">Pomodoro</strong>
+                    <p className="text-zinc-500 mt-0.5">Peak Productivity.</p>
+                  </div>
+                  <div>
+                    <strong className="text-[#1D1D1F]">World Clock</strong>
+                    <p className="text-zinc-500 mt-0.5">Time without Borders.</p>
+                  </div>
+                  <div>
+                    <strong className="text-[#1D1D1F]">Smart Alarms</strong>
+                    <p className="text-zinc-500 mt-0.5">Precision Scheduling.</p>
+                  </div>
+                  <div>
+                    <strong className="text-[#1D1D1F]">Workspace</strong>
+                    <p className="text-zinc-500 mt-0.5">Fluid Movement.</p>
+                  </div>
+                  <div>
+                    <strong className="text-[#1D1D1F]">Timer</strong>
+                    <p className="text-zinc-500 mt-0.5">Targeted Focus.</p>
+                  </div>
+                  <div>
+                    <strong className="text-[#1D1D1F]">Stopwatch</strong>
+                    <p className="text-zinc-500 mt-0.5">Every Second Counts.</p>
+                  </div>
+                </div>
               </div>
 
               <div className="text-center text-xs text-zinc-500 mt-6">
-                Made with ❤️ by <a href="https://priyambodo.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Doddi Priyambodo</a>
+                Designed & Crafted by <a href="https://priyambodo.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-medium">Doddi Priyambodo</a><br/>
+                with the support of <i>Chisiella Alzena Athaya</i>
               </div>
             </div>
 
