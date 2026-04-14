@@ -23,7 +23,8 @@ export default function Alarm() {
   const [isOpen, setIsOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [newTime, setNewTime] = useState('08:00');
+  const [newHours, setNewHours] = useState('08');
+  const [newMinutes, setNewMinutes] = useState('00');
   const [newLabel, setNewLabel] = useState('');
 
   // 1. Load from local storage on mount
@@ -81,8 +82,10 @@ export default function Alarm() {
 
   const addAlarm = () => {
     const id = Math.random().toString(36).substring(7);
-    setAlarms([...alarms, { id, time: newTime, label: newLabel, enabled: true }]);
-    setNewTime('08:00');
+    const combinedTime = `${newHours}:${newMinutes}`;
+    setAlarms([...alarms, { id, time: combinedTime, label: newLabel, enabled: true }]);
+    setNewHours('08');
+    setNewMinutes('00');
     setNewLabel('');
     setIsOpen(false);
   };
@@ -135,12 +138,77 @@ export default function Alarm() {
               <div className="space-y-4 mt-2">
                 <div className="flex flex-col space-y-1">
                   <label className="text-sm font-medium text-zinc-600">Time</label>
-                  <input 
-                    type="time" 
-                    className="border border-zinc-200 rounded-lg p-3 text-2xl font-bold font-mono bg-white text-[#1D1D1F]"
-                    value={newTime}
-                    onChange={(e) => setNewTime(e.target.value)}
-                  />
+                  <div className="flex items-center justify-center space-x-2 bg-zinc-50 p-4 rounded-xl border border-zinc-200">
+                    {/* Hours Input */}
+                    <div className="flex flex-col items-center">
+                      <button 
+                        onClick={() => setNewHours(prev => {
+                          const val = parseInt(prev);
+                          return val >= 23 ? '00' : (val + 1).toString().padStart(2, '0');
+                        })}
+                        className="text-zinc-400 hover:text-zinc-600"
+                      >
+                        <ChevronUp className="w-6 h-6" />
+                      </button>
+                      <input 
+                        type="text" 
+                        className="w-16 text-center text-4xl font-bold font-mono bg-transparent text-[#1D1D1F] focus:outline-none"
+                        value={newHours}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, '');
+                          if (val.length <= 2) {
+                            const num = parseInt(val);
+                            if (num >= 0 && num <= 23) setNewHours(val.padStart(2, '0'));
+                          }
+                        }}
+                      />
+                      <button 
+                        onClick={() => setNewHours(prev => {
+                          const val = parseInt(prev);
+                          return val <= 0 ? '23' : (val - 1).toString().padStart(2, '0');
+                        })}
+                        className="text-zinc-400 hover:text-zinc-600"
+                      >
+                        <ChevronDown className="w-6 h-6" />
+                      </button>
+                    </div>
+
+                    <span className="text-4xl font-bold text-[#1D1D1F]">:</span>
+
+                    {/* Minutes Input */}
+                    <div className="flex flex-col items-center">
+                      <button 
+                        onClick={() => setNewMinutes(prev => {
+                          const val = parseInt(prev);
+                          return val >= 59 ? '00' : (val + 1).toString().padStart(2, '0');
+                        })}
+                        className="text-zinc-400 hover:text-zinc-600"
+                      >
+                        <ChevronUp className="w-6 h-6" />
+                      </button>
+                      <input 
+                        type="text" 
+                        className="w-16 text-center text-4xl font-bold font-mono bg-transparent text-[#1D1D1F] focus:outline-none"
+                        value={newMinutes}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, '');
+                          if (val.length <= 2) {
+                            const num = parseInt(val);
+                            if (num >= 0 && num <= 59) setNewMinutes(val.padStart(2, '0'));
+                          }
+                        }}
+                      />
+                      <button 
+                        onClick={() => setNewMinutes(prev => {
+                          const val = parseInt(prev);
+                          return val <= 0 ? '59' : (val - 1).toString().padStart(2, '0');
+                        })}
+                        className="text-zinc-400 hover:text-zinc-600"
+                      >
+                        <ChevronDown className="w-6 h-6" />
+                      </button>
+                    </div>
+                  </div>
                 </div>
                 <div className="flex flex-col space-y-1">
                   <label className="text-sm font-medium text-zinc-600">Label</label>
