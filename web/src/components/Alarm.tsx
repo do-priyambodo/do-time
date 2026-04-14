@@ -16,6 +16,7 @@ type AlarmItem = {
   time: string; // HH:MM
   label: string;
   enabled: boolean;
+  repeatDays?: number[]; // 0 = Sunday, 1 = Monday, etc.
 };
 
 export default function Alarm() {
@@ -26,6 +27,7 @@ export default function Alarm() {
   const [newHours, setNewHours] = useState('08');
   const [newMinutes, setNewMinutes] = useState('00');
   const [newLabel, setNewLabel] = useState('');
+  const [selectedDays, setSelectedDays] = useState<number[]>([]);
 
   // 1. Load from local storage on mount
   useEffect(() => {
@@ -52,11 +54,15 @@ export default function Alarm() {
 
       setAlarms(prev => {
         let triggeredAlarm: AlarmItem | undefined;
+        const currentDay = now.getDay();
         
         const updated = prev.map(alarm => {
-          if (alarm.enabled && alarm.time === currentTimeStr && currentSeconds === 0) {
+          const isRightDay = !alarm.repeatDays || alarm.repeatDays.length === 0 || alarm.repeatDays.includes(currentDay);
+          
+          if (alarm.enabled && alarm.time === currentTimeStr && currentSeconds === 0 && isRightDay) {
             triggeredAlarm = alarm;
-            return { ...alarm, enabled: false }; // Disable after trigger
+            const shouldDisable = !alarm.repeatDays || alarm.repeatDays.length === 0;
+            return { ...alarm, enabled: !shouldDisable };
           }
           return alarm;
         });
@@ -83,10 +89,11 @@ export default function Alarm() {
   const addAlarm = () => {
     const id = Math.random().toString(36).substring(7);
     const combinedTime = `${newHours}:${newMinutes}`;
-    setAlarms([...alarms, { id, time: combinedTime, label: newLabel, enabled: true }]);
+    setAlarms([...alarms, { id, time: combinedTime, label: newLabel, enabled: true, repeatDays: selectedDays }]);
     setNewHours('08');
     setNewMinutes('00');
     setNewLabel('');
+    setSelectedDays([]);
     setIsOpen(false);
   };
 
@@ -220,6 +227,35 @@ export default function Alarm() {
                     onChange={(e) => setNewLabel(e.target.value)}
                   />
                 </div>
+                
+                {/* Repeat Days UI */}
+                <div className="flex flex-col space-y-1">
+                  <label className="text-sm font-medium text-zinc-600">Repeat</label>
+                  <div className="flex justify-between gap-1">
+                    {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setSelectedDays(prev => 
+                          prev.includes(index) ? prev.filter(d => d !== index) : [...prev, index]
+                        )}
+                        className={`w-9 h-9 rounded-full text-sm font-medium transition-colors ${selectedDays.includes(index) ? 'bg-blue-600 text-white' : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'}`}
+                      >
+                        {day}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Test Button */}
+                <div className="flex justify-end">
+                  <button 
+                    onClick={() => playChime()}
+                    className="text-xs text-blue-600 font-medium hover:underline"
+                  >
+                    Test Alarm Sound
+                  </button>
+                </div>
+
                 <button 
                   onClick={addAlarm}
                   className="w-full bg-blue-600 text-white font-medium py-3 rounded-xl hover:bg-blue-700 transition-colors"
