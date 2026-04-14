@@ -9,7 +9,7 @@ export function playChime() {
   if (typeof window === 'undefined') return;
   
   try {
-    const audio = new Audio('/alarm.mp3');
+    const audio = new Audio('/iphone_alarm.mp3');
     audio.play().catch(error => {
       console.error("Failed to play sound (likely autoplay policy):", error);
     });
