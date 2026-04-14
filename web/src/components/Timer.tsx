@@ -93,7 +93,7 @@ export default function Timer() {
               {formatTime(timeLeft)}
             </div>
           ) : (
-            <div className="flex items-center justify-center space-x-4 bg-zinc-50 p-4 rounded-xl border border-zinc-200">
+            <div className="flex items-center justify-center space-x-4 bg-zinc-50 p-6 rounded-2xl border border-zinc-200">
               {/* Hours Input */}
               <div className="flex flex-col items-center">
                 <button 
@@ -103,7 +103,7 @@ export default function Timer() {
                   })}
                   className="text-zinc-400 hover:text-zinc-600"
                 >
-                  <ChevronUp className="w-5 h-5" />
+                  <ChevronUp className="w-6 h-6" />
                 </button>
                 <input 
                   type="text" 
@@ -118,7 +118,7 @@ export default function Timer() {
                     if (inputHours === '') setInputHours('00');
                     else setInputHours(inputHours.padStart(2, '0'));
                   }}
-                  className="w-12 text-center text-3xl font-bold font-mono bg-transparent text-[#1D1D1F] focus:outline-none" 
+                  className="w-16 text-center text-4xl font-bold font-mono bg-transparent text-[#1D1D1F] focus:outline-none" 
                 />
                 <button 
                   onClick={() => setInputHours(prev => {
@@ -127,12 +127,12 @@ export default function Timer() {
                   })}
                   className="text-zinc-400 hover:text-zinc-600"
                 >
-                  <ChevronDown className="w-5 h-5" />
+                  <ChevronDown className="w-6 h-6" />
                 </button>
-                <span className="text-xs text-zinc-500 mt-1">hours</span>
+                <span className="text-sm text-zinc-500 mt-2">hours</span>
               </div>
 
-              <span className="text-3xl font-bold text-[#1D1D1F] mb-5">:</span>
+              <span className="text-4xl font-bold text-[#1D1D1F] mb-6">:</span>
 
               {/* Minutes Input */}
               <div className="flex flex-col items-center">
@@ -143,7 +143,7 @@ export default function Timer() {
                   })}
                   className="text-zinc-400 hover:text-zinc-600"
                 >
-                  <ChevronUp className="w-5 h-5" />
+                  <ChevronUp className="w-6 h-6" />
                 </button>
                 <input 
                   type="text" 
@@ -158,7 +158,7 @@ export default function Timer() {
                     if (inputMinutes === '') setInputMinutes('00');
                     else setInputMinutes(inputMinutes.padStart(2, '0'));
                   }}
-                  className="w-12 text-center text-3xl font-bold font-mono bg-transparent text-[#1D1D1F] focus:outline-none" 
+                  className="w-16 text-center text-4xl font-bold font-mono bg-transparent text-[#1D1D1F] focus:outline-none" 
                 />
                 <button 
                   onClick={() => setInputMinutes(prev => {
@@ -167,12 +167,12 @@ export default function Timer() {
                   })}
                   className="text-zinc-400 hover:text-zinc-600"
                 >
-                  <ChevronDown className="w-5 h-5" />
+                  <ChevronDown className="w-6 h-6" />
                 </button>
-                <span className="text-xs text-zinc-500 mt-1">min</span>
+                <span className="text-sm text-zinc-500 mt-2">min</span>
               </div>
 
-              <span className="text-3xl font-bold text-[#1D1D1F] mb-5">:</span>
+              <span className="text-4xl font-bold text-[#1D1D1F] mb-6">:</span>
 
               {/* Seconds Input */}
               <div className="flex flex-col items-center">
@@ -183,7 +183,7 @@ export default function Timer() {
                   })}
                   className="text-zinc-400 hover:text-zinc-600"
                 >
-                  <ChevronUp className="w-5 h-5" />
+                  <ChevronUp className="w-6 h-6" />
                 </button>
                 <input 
                   type="text" 
@@ -198,7 +198,7 @@ export default function Timer() {
                     if (inputSeconds === '') setInputSeconds('00');
                     else setInputSeconds(inputSeconds.padStart(2, '0'));
                   }}
-                  className="w-12 text-center text-3xl font-bold font-mono bg-transparent text-[#1D1D1F] focus:outline-none" 
+                  className="w-16 text-center text-4xl font-bold font-mono bg-transparent text-[#1D1D1F] focus:outline-none" 
                 />
                 <button 
                   onClick={() => setInputSeconds(prev => {
@@ -207,9 +207,9 @@ export default function Timer() {
                   })}
                   className="text-zinc-400 hover:text-zinc-600"
                 >
-                  <ChevronDown className="w-5 h-5" />
+                  <ChevronDown className="w-6 h-6" />
                 </button>
-                <span className="text-xs text-zinc-500 mt-1">sec</span>
+                <span className="text-sm text-zinc-500 mt-2">sec</span>
               </div>
             </div>
           )}
