@@ -211,7 +211,7 @@ export default function Pomodoro({ sound }: { sound?: string }) {
 
       {/* Completion Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="bg-white/90 backdrop-blur-2xl border-zinc-200 max-w-md rounded-3xl text-[#1D1D1F] p-8 flex flex-col items-center space-y-6">
+        <DialogContent className="bg-white/90 backdrop-blur-2xl border-zinc-200 w-[95%] max-w-md rounded-3xl text-[#1D1D1F] p-6 sm:p-8 flex flex-col items-center space-y-6">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-center">Pomodoro</DialogTitle>
           </DialogHeader>

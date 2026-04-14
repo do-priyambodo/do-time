@@ -135,7 +135,7 @@ export default function ZoneComparison() {
             <DialogTrigger className="text-xs text-blue-600 font-medium hover:underline flex items-center gap-1 cursor-pointer">
               <Plus className="w-3 h-3" /> Add City
             </DialogTrigger>
-            <DialogContent className="bg-white/90 backdrop-blur-xl border-zinc-200 max-w-md rounded-2xl text-[#1D1D1F]">
+            <DialogContent className="bg-white/90 backdrop-blur-xl border-zinc-200 w-[95%] max-w-md rounded-2xl text-[#1D1D1F]">
               <DialogHeader>
                 <DialogTitle className="text-lg font-bold">Add City</DialogTitle>
               </DialogHeader>

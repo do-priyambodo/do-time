@@ -231,7 +231,7 @@ export default function Home() {
         </div>
         {/* Reset Confirmation Modal */}
         <Dialog open={isResetModalOpen} onOpenChange={setIsResetModalOpen}>
-          <DialogContent className="bg-white/90 backdrop-blur-2xl border-zinc-200 max-w-md rounded-3xl text-[#1D1D1F] p-8 flex flex-col items-center space-y-6">
+          <DialogContent className="bg-white/90 backdrop-blur-2xl border-zinc-200 w-[95%] max-w-md rounded-3xl text-[#1D1D1F] p-6 sm:p-8 flex flex-col items-center space-y-6">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold text-center">Reset to Default State?</DialogTitle>
             </DialogHeader>
@@ -257,7 +257,7 @@ export default function Home() {
 
         {/* Settings Modal */}
         <Dialog open={isSettingsModalOpen} onOpenChange={setIsSettingsModalOpen}>
-          <DialogContent className="bg-white/90 backdrop-blur-2xl border-zinc-200 max-w-md rounded-3xl text-[#1D1D1F] p-8 space-y-6">
+          <DialogContent className="bg-white/90 backdrop-blur-2xl border-zinc-200 w-[95%] max-w-md rounded-3xl text-[#1D1D1F] p-6 sm:p-8 space-y-6">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold text-center">Settings</DialogTitle>
             </DialogHeader>
@@ -320,7 +320,7 @@ export default function Home() {
 
         {/* About Modal */}
         <Dialog open={isAboutModalOpen} onOpenChange={setIsAboutModalOpen}>
-          <DialogContent className="bg-white/90 backdrop-blur-2xl border-zinc-200 max-w-md rounded-3xl text-[#1D1D1F] p-8 space-y-6 max-h-[80vh] overflow-y-auto">
+          <DialogContent className="bg-white/90 backdrop-blur-2xl border-zinc-200 w-[95%] max-w-md rounded-3xl text-[#1D1D1F] p-6 sm:p-8 space-y-6 max-h-[80vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold text-center">About do-time</DialogTitle>
             </DialogHeader>

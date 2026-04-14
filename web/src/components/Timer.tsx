@@ -78,7 +78,7 @@ export default function Timer({ sound }: { sound?: string }) {
   };
 
   return (
-    <div className="w-full max-w-2xl space-y-4 mt-8">
+    <div className="w-full max-w-md sm:max-w-2xl space-y-4 mt-8">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <h2 className="text-xl font-bold tracking-tight">Timer</h2>
@@ -99,7 +99,7 @@ export default function Timer({ sound }: { sound?: string }) {
               {formatTime(timeLeft)}
             </div>
           ) : (
-            <div className="flex items-center justify-center space-x-4 bg-zinc-50 p-6 rounded-2xl border border-zinc-200">
+            <div className="flex items-center justify-center space-x-1 sm:space-x-4 bg-zinc-50 p-3 sm:p-6 rounded-2xl border border-zinc-200 w-full max-w-md">
               {/* Hours Input */}
               <div className="flex flex-col items-center">
                 <button 
@@ -124,7 +124,7 @@ export default function Timer({ sound }: { sound?: string }) {
                     if (inputHours === '') setInputHours('00');
                     else setInputHours(inputHours.padStart(2, '0'));
                   }}
-                  className="w-16 text-center text-4xl font-bold font-mono bg-transparent text-[#1D1D1F] focus:outline-none" 
+                  className="w-12 sm:w-16 text-center text-3xl sm:text-4xl font-bold font-mono bg-transparent text-[#1D1D1F] focus:outline-none"
                 />
                 <button 
                   onClick={() => setInputHours(prev => {
@@ -164,7 +164,7 @@ export default function Timer({ sound }: { sound?: string }) {
                     if (inputMinutes === '') setInputMinutes('00');
                     else setInputMinutes(inputMinutes.padStart(2, '0'));
                   }}
-                  className="w-16 text-center text-4xl font-bold font-mono bg-transparent text-[#1D1D1F] focus:outline-none" 
+                  className="w-12 sm:w-16 text-center text-3xl sm:text-4xl font-bold font-mono bg-transparent text-[#1D1D1F] focus:outline-none"
                 />
                 <button 
                   onClick={() => setInputMinutes(prev => {
@@ -204,7 +204,7 @@ export default function Timer({ sound }: { sound?: string }) {
                     if (inputSeconds === '') setInputSeconds('00');
                     else setInputSeconds(inputSeconds.padStart(2, '0'));
                   }}
-                  className="w-16 text-center text-4xl font-bold font-mono bg-transparent text-[#1D1D1F] focus:outline-none" 
+                  className="w-12 sm:w-16 text-center text-3xl sm:text-4xl font-bold font-mono bg-transparent text-[#1D1D1F] focus:outline-none"
                 />
                 <button 
                   onClick={() => setInputSeconds(prev => {
@@ -239,7 +239,7 @@ export default function Timer({ sound }: { sound?: string }) {
 
       {/* Completion Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="bg-white/90 backdrop-blur-2xl border-zinc-200 max-w-md rounded-3xl text-[#1D1D1F] p-8 flex flex-col items-center space-y-6">
+        <DialogContent className="bg-white/90 backdrop-blur-2xl border-zinc-200 w-[95%] max-w-md rounded-3xl text-[#1D1D1F] p-6 sm:p-8 flex flex-col items-center space-y-6">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-center">Timer</DialogTitle>
           </DialogHeader>

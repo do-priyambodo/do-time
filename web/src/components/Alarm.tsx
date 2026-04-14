@@ -233,7 +233,7 @@ export default function Alarm({ sound }: { sound?: string }) {
             >
               <Plus className="w-3 h-3" /> Add Alarm
             </DialogTrigger>
-            <DialogContent className="bg-white/90 backdrop-blur-xl border-zinc-200 max-w-md rounded-2xl text-[#1D1D1F]">
+            <DialogContent className="bg-white/90 backdrop-blur-xl border-zinc-200 w-[95%] max-w-md rounded-2xl text-[#1D1D1F]">
               <DialogHeader>
                 <DialogTitle className="text-lg font-bold">{editingAlarmId ? 'Edit Alarm' : 'Set Alarm'}</DialogTitle>
               </DialogHeader>
@@ -405,7 +405,7 @@ export default function Alarm({ sound }: { sound?: string }) {
 
       {/* Ringing Modal */}
       <Dialog open={ringingAlarm !== null} onOpenChange={() => {}}>
-        <DialogContent className="bg-white/90 backdrop-blur-2xl border-zinc-200 max-w-md rounded-3xl text-[#1D1D1F] p-8 flex flex-col items-center space-y-6">
+        <DialogContent className="bg-white/90 backdrop-blur-2xl border-zinc-200 w-[95%] max-w-md rounded-3xl text-[#1D1D1F] p-6 sm:p-8 flex flex-col items-center space-y-6">
           <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center animate-pulse">
             <Bell className="w-10 h-10 text-blue-600" />
           </div>
