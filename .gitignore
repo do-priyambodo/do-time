@@ -1,0 +1,20 @@
+env.local
+.env.local
+AGENTS.md
+BRAINSTORMING.md
+TECHNOLOGY.md
+UX.md
+.DS_Store
+
+# Web (Next.js) specific ignores
+web/node_modules/
+web/.next/
+web/out/
+web/build/
+web/coverage/
+web/.vercel/
+web/.env*
+web/*.tsbuildinfo
+web/next-env.d.ts
+web/npm-debug.log*
+web/*.pem
