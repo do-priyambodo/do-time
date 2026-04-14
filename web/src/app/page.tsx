@@ -198,7 +198,7 @@ function ReorderItem({ id }: { id: string }) {
     >
       <div 
         onPointerDown={(e) => controls.start(e)} 
-        className="cursor-grab p-1.5 bg-white/90 backdrop-blur-sm border border-zinc-200 rounded-full shadow-sm hover:shadow-md transition-all duration-300 z-20 mt-10 h-fit"
+        className="cursor-grab p-1.5 bg-white/90 backdrop-blur-sm border border-zinc-200 rounded-full shadow-sm hover:shadow-md transition-all duration-300 z-20 mt-9 h-fit"
         title="Drag to reorder"
       >
         <GripVertical className="w-4 h-4 text-zinc-400" />
