@@ -88,6 +88,16 @@ export default function Alarm() {
     }
   }, [alarms, mounted]);
 
+  const testRingingModal = () => {
+    playChime();
+    setRingingAlarm({
+      id: 'test',
+      time: '12:34',
+      label: 'Test Alarm',
+      enabled: true
+    });
+  };
+
   const stopAlarm = () => {
     setRingingAlarm(null);
   };
@@ -312,7 +322,7 @@ export default function Alarm() {
                 {/* Test Button */}
                 <div className="flex justify-end">
                   <button 
-                    onClick={() => playChime()}
+                    onClick={testRingingModal}
                     className="text-xs text-blue-600 font-medium hover:underline"
                   >
                     Test Alarm Sound
