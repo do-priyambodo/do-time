@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Play, Pause, SkipForward, RotateCcw, Coffee, Brain } from 'lucide-react';
+import { Play, Pause, SkipForward, RotateCcw, Coffee, Brain, ChevronDown, ChevronUp } from 'lucide-react';
 import { playChime } from '@/lib/utils';
 
 type PomodoroMode = 'focus' | 'shortBreak' | 'longBreak';
@@ -17,6 +17,7 @@ export default function Pomodoro() {
   const [timeLeft, setTimeLeft] = useState(MODE_TIMES[mode]);
   const [isActive, setIsActive] = useState(false);
   const [sessionsCompleted, setSessionsCompleted] = useState(0);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   // Reset timer when mode changes
   useEffect(() => {
@@ -112,6 +113,12 @@ export default function Pomodoro() {
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <h2 className="text-xl font-bold text-[#1D1D1F] tracking-tight">Pomodoro</h2>
+          <button 
+            onClick={() => setIsCollapsed(!isCollapsed)} 
+            className="text-zinc-400 hover:text-zinc-600 transition-colors"
+          >
+            {isCollapsed ? <ChevronDown className="w-5 h-5" /> : <ChevronUp className="w-5 h-5" />}
+          </button>
           <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${getModeColor()}`}>
             {mode === 'focus' ? <Brain className="w-3 h-3" /> : <Coffee className="w-3 h-3" />}
             <span className="capitalize">{mode.replace('Break', ' Break')}</span>
@@ -123,7 +130,9 @@ export default function Pomodoro() {
         </div>
       </div>
 
-      <div className="flex flex-col items-center justify-center py-6 space-y-4">
+      {!isCollapsed && (
+        <>
+          <div className="flex flex-col items-center justify-center py-6 space-y-4">
         {/* Timer Display */}
         <div className="text-6xl font-bold font-mono text-[#1D1D1F] tracking-tighter">
           {formatTime(timeLeft)}
@@ -180,7 +189,9 @@ export default function Pomodoro() {
           );
         })}
       </div>
+        </>
+      )}
+      </div>
     </div>
-  </div>
   );
 }

@@ -10,7 +10,7 @@ import Stopwatch from "@/components/Stopwatch";
 import Pomodoro from "@/components/Pomodoro";
 import { ChevronDown, ChevronUp, GripVertical } from 'lucide-react';
 
-const INITIAL_ORDER = ['zone', 'pomodoro', 'alarm', 'timer', 'stopwatch'];
+const INITIAL_ORDER = ['zone', 'alarm', 'pomodoro', 'timer', 'stopwatch'];
 
 export default function Home() {
   const [isControlsCollapsed, setIsControlsCollapsed] = useState(false);
