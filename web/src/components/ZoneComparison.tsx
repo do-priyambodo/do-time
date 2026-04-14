@@ -69,7 +69,7 @@ export default function ZoneComparison() {
   };
 
   const addZone = (newZone: ZoneItem) => {
-    if (zones.length < 4 && !zones.some(z => z.zone === newZone.zone)) {
+    if (zones.length < 4 && !zones.some(z => z.city === newZone.city)) {
       setZones([...zones, newZone]);
       setIsOpen(false);
       setSearchQuery(''); // Reset search
@@ -187,7 +187,7 @@ export default function ZoneComparison() {
                   .filter(item => item.city.toLowerCase().includes(searchQuery.toLowerCase()))
                   .sort((a, b) => (a.countryCode || '').localeCompare(b.countryCode || ''))
                   .map((item) => {
-                    const isAdded = zones.some(z => z.zone === item.zone);
+                    const isAdded = zones.some(z => z.city === item.city);
                     return (
                       <button
                         key={`${item.city}-${item.zone}`}
