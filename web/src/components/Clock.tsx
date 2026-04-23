@@ -48,7 +48,7 @@ export default function Clock({ onToggleMaximize, isMaximized }: { onToggleMaxim
           {isMaximized ? <Minimize2 className="w-6 h-6" /> : <Maximize2 className="w-6 h-6" />}
         </button>
       )}
-      <div className={`font-bold tracking-tighter text-[#1D1D1F] font-mono ${isMaximized ? 'text-[8rem] sm:text-[12rem]' : 'text-7xl'}`}>
+      <div className={`font-bold tracking-tighter text-[#1D1D1F] font-mono ${isMaximized ? 'text-[5rem] sm:text-[8rem]' : 'text-7xl'}`}>
         {hours}:{minutes}:{seconds}
       </div>
       <div className={`text-zinc-500 font-medium uppercase tracking-wider ${isMaximized ? 'text-2xl' : 'text-sm'}`}>

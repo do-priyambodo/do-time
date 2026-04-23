@@ -17,7 +17,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-const INITIAL_ORDER = ['zone', 'alarm', 'timer', 'stopwatch'];
+const INITIAL_ORDER = ['clock', 'alarm', 'pomodoro', 'zone', 'timer', 'stopwatch', 'controls'];
 
 export default function Home() {
   const [isControlsCollapsed, setIsControlsCollapsed] = useState(false);
@@ -50,7 +50,7 @@ export default function Home() {
       setMounted(true);
       const savedOrder = localStorage.getItem('do-time-order');
       if (savedOrder) {
-        const parsedOrder = JSON.parse(savedOrder).filter((item: string) => item !== 'pomodoro');
+        const parsedOrder = JSON.parse(savedOrder);
         // Ensure all items from INITIAL_ORDER are present
         const mergedOrder = [
           ...parsedOrder,
@@ -140,110 +140,34 @@ export default function Home() {
         )}
         
         {maximizedModule === null ? (
-          <>
-            <Clock onToggleMaximize={() => setMaximizedModule('clock')} isMaximized={false} />
-            
-            <Pomodoro sound={settings.pomodoro} onToggleMaximize={() => setMaximizedModule(maximizedModule === 'pomodoro' ? null : 'pomodoro')} isMaximized={maximizedModule === 'pomodoro'} />
-            
-            {/* Reorderable Sections */}
-            <Reorder.Group axis="y" values={order} onReorder={setOrder} className="w-full flex flex-col items-center space-y-4">
-              {order.map((id) => (
-                <ReorderItem key={id} id={id} sound={settings[id as keyof typeof settings]} onToggleMaximize={() => setMaximizedModule(maximizedModule === id ? null : id)} isMaximized={maximizedModule === id} />
-              ))}
-            </Reorder.Group>
-          </>
+          <Reorder.Group axis="y" values={order} onReorder={setOrder} className="w-full flex flex-col items-center space-y-4">
+            {order.map((id) => (
+              <ReorderItem 
+                key={id} 
+                id={id} 
+                sound={settings[id as keyof typeof settings]} 
+                onToggleMaximize={() => setMaximizedModule(maximizedModule === id ? null : id)} 
+                isMaximized={maximizedModule === id}
+                timeOfDay={timeOfDay}
+                setTimeOfDay={setTimeOfDay}
+                isManual={isManual}
+                setIsManual={setIsManual}
+                setIsResetModalOpen={setIsResetModalOpen}
+                setIsSettingsModalOpen={setIsSettingsModalOpen}
+                setIsAboutModalOpen={setIsAboutModalOpen}
+                isControlsCollapsed={isControlsCollapsed}
+                setIsControlsCollapsed={setIsControlsCollapsed}
+                settings={settings}
+                setTempSettings={setTempSettings}
+              />
+            ))}
+          </Reorder.Group>
         ) : (
           <div className="w-full flex flex-col items-center justify-center max-w-2xl mx-auto space-y-4 mt-8">
             {maximizedModule === 'clock' && <Clock onToggleMaximize={() => setMaximizedModule(null)} isMaximized />}
             {maximizedModule === 'pomodoro' && <Pomodoro sound={settings.pomodoro} onToggleMaximize={() => setMaximizedModule(null)} isMaximized />}
             {maximizedModule === 'timer' && <Timer sound={settings.timer} onToggleMaximize={() => setMaximizedModule(null)} isMaximized />}
             {maximizedModule === 'stopwatch' && <Stopwatch onToggleMaximize={() => setMaximizedModule(null)} isMaximized />}
-          </div>
-        )}
-        
-        {maximizedModule === null && (
-          <div className="w-full max-w-2xl space-y-4 mt-8">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <h2 className={`text-xl font-bold tracking-tight ${isNight ? 'text-white' : 'text-[#1D1D1F]'}`}>Controls</h2>
-              <button 
-                onClick={() => setIsControlsCollapsed(!isControlsCollapsed)} 
-                className="text-zinc-400 hover:text-zinc-600 transition-colors"
-              >
-                {isControlsCollapsed ? <ChevronDown className="w-5 h-5" /> : <ChevronUp className="w-5 h-5" />}
-              </button>
-            </div>
-          </div>
-
-          {!isControlsCollapsed && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-7 gap-2 w-full">
-                <button 
-                  onClick={() => { setTimeOfDay('sunrise'); setIsManual(true); }}
-                  className={`border border-zinc-200 bg-white/80 backdrop-blur-md p-2 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center ${timeOfDay === 'sunrise' ? 'ring-2 ring-blue-500' : ''}`}
-                >
-                  <span className="text-xl mb-1">🌅</span>
-                  <span className="text-xs font-medium text-[#1D1D1F]">Sunrise</span>
-                </button>
-                <button 
-                  onClick={() => { setTimeOfDay('noon'); setIsManual(true); }}
-                  className={`border border-zinc-200 bg-white/80 backdrop-blur-md p-2 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center ${timeOfDay === 'noon' ? 'ring-2 ring-blue-500' : ''}`}
-                >
-                  <span className="text-xl mb-1">☀️</span>
-                  <span className="text-xs font-medium text-[#1D1D1F]">Noon</span>
-                </button>
-                <button 
-                  onClick={() => { setTimeOfDay('sunset'); setIsManual(true); }}
-                  className={`border border-zinc-200 bg-white/80 backdrop-blur-md p-2 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center ${timeOfDay === 'sunset' ? 'ring-2 ring-blue-500' : ''}`}
-                >
-                  <span className="text-xl mb-1">🌆</span>
-                  <span className="text-xs font-medium text-[#1D1D1F]">Sunset</span>
-                </button>
-                <button 
-                  onClick={() => { setTimeOfDay('night'); setIsManual(true); }}
-                  className={`border border-zinc-200 bg-white/80 backdrop-blur-md p-2 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center ${timeOfDay === 'night' ? 'ring-2 ring-blue-500' : ''}`}
-                >
-                  <span className="text-xl mb-1">🌙</span>
-                  <span className="text-xs font-medium text-[#1D1D1F]">Night</span>
-                </button>
-                <button 
-                  onClick={() => setIsResetModalOpen(true)}
-                  className="border border-zinc-200 bg-white/80 backdrop-blur-md p-2 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center"
-                >
-                  <span className="text-xl mb-1">🔄</span>
-                  <span className="text-xs font-medium text-[#1D1D1F]">Reset</span>
-                </button>
-                <button 
-                  onClick={() => {
-                    setTempSettings(settings);
-                    setIsSettingsModalOpen(true);
-                  }}
-                  className="border border-zinc-200 bg-white/80 backdrop-blur-md p-2 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center"
-                >
-                  <span className="text-xl mb-1">⚙️</span>
-                  <span className="text-xs font-medium text-[#1D1D1F]">Setting</span>
-                </button>
-                <button 
-                  onClick={() => setIsAboutModalOpen(true)}
-                  className="border border-zinc-200 bg-white/80 backdrop-blur-md p-2 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center"
-                >
-                  <span className="text-xl mb-1">ℹ️</span>
-                  <span className="text-xs font-medium text-[#1D1D1F]">About</span>
-                </button>
-              </div>
-              
-              {isManual && (
-                <div className="flex justify-center">
-                  <button 
-                    onClick={() => setIsManual(false)}
-                    className="text-xs text-blue-600 font-medium hover:underline flex items-center gap-1 cursor-pointer"
-                  >
-                    Reset to Automatic Time
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
           </div>
         )}
         {/* Reset Confirmation Modal */}
@@ -400,15 +324,134 @@ export default function Home() {
   );
 }
 
-function ReorderItem({ id, sound, onToggleMaximize, isMaximized }: { id: string, sound?: string, onToggleMaximize: () => void, isMaximized: boolean }) {
-  const controls = useDragControls();
+function ReorderItem({ 
+  id, 
+  sound, 
+  onToggleMaximize, 
+  isMaximized,
+  timeOfDay,
+  setTimeOfDay,
+  isManual,
+  setIsManual,
+  setIsResetModalOpen,
+  setIsSettingsModalOpen,
+  setIsAboutModalOpen,
+  isControlsCollapsed,
+  setIsControlsCollapsed,
+  settings,
+  setTempSettings
+}: { 
+  id: string; 
+  sound?: string; 
+  onToggleMaximize: () => void; 
+  isMaximized: boolean;
+  timeOfDay: 'sunrise' | 'noon' | 'sunset' | 'night';
+  setTimeOfDay: (time: 'sunrise' | 'noon' | 'sunset' | 'night') => void;
+  isManual: boolean;
+  setIsManual: (m: boolean) => void;
+  setIsResetModalOpen: (o: boolean) => void;
+  setIsSettingsModalOpen: (o: boolean) => void;
+  setIsAboutModalOpen: (o: boolean) => void;
+  isControlsCollapsed: boolean;
+  setIsControlsCollapsed: (c: boolean) => void;
+  settings: { alarm: string; timer: string; pomodoro: string };
+  setTempSettings: (s: { alarm: string; timer: string; pomodoro: string }) => void;
+}) {
+  const dragControls = useDragControls();
   
   const renderComponent = () => {
     switch (id) {
+      case 'clock': return <Clock onToggleMaximize={onToggleMaximize} isMaximized={isMaximized} />;
+      case 'pomodoro': return <Pomodoro sound={sound} onToggleMaximize={onToggleMaximize} isMaximized={isMaximized} />;
       case 'zone': return <ZoneComparison />;
       case 'alarm': return <Alarm sound={sound} />;
       case 'timer': return <Timer sound={sound} onToggleMaximize={onToggleMaximize} isMaximized={isMaximized} />;
       case 'stopwatch': return <Stopwatch onToggleMaximize={onToggleMaximize} isMaximized={isMaximized} />;
+      case 'controls': return (
+        <div className="w-full max-w-2xl space-y-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <h2 className="text-xl font-bold tracking-tight">Controls</h2>
+              <button 
+                onClick={() => setIsControlsCollapsed(!isControlsCollapsed)} 
+                className="text-zinc-400 hover:text-zinc-600 transition-colors"
+              >
+                {isControlsCollapsed ? <ChevronDown className="w-5 h-5" /> : <ChevronUp className="w-5 h-5" />}
+              </button>
+            </div>
+          </div>
+
+          {!isControlsCollapsed && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-7 gap-2 w-full">
+                <button 
+                  onClick={() => { setTimeOfDay('sunrise'); setIsManual(true); }}
+                  className={`border border-zinc-200 bg-white/80 backdrop-blur-md p-2 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center ${timeOfDay === 'sunrise' ? 'ring-2 ring-blue-500' : ''}`}
+                >
+                  <span className="text-xl mb-1">🌅</span>
+                  <span className="text-xs font-medium text-[#1D1D1F]">Sunrise</span>
+                </button>
+                <button 
+                  onClick={() => { setTimeOfDay('noon'); setIsManual(true); }}
+                  className={`border border-zinc-200 bg-white/80 backdrop-blur-md p-2 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center ${timeOfDay === 'noon' ? 'ring-2 ring-blue-500' : ''}`}
+                >
+                  <span className="text-xl mb-1">☀️</span>
+                  <span className="text-xs font-medium text-[#1D1D1F]">Noon</span>
+                </button>
+                <button 
+                  onClick={() => { setTimeOfDay('sunset'); setIsManual(true); }}
+                  className={`border border-zinc-200 bg-white/80 backdrop-blur-md p-2 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center ${timeOfDay === 'sunset' ? 'ring-2 ring-blue-500' : ''}`}
+                >
+                  <span className="text-xl mb-1">🌆</span>
+                  <span className="text-xs font-medium text-[#1D1D1F]">Sunset</span>
+                </button>
+                <button 
+                  onClick={() => { setTimeOfDay('night'); setIsManual(true); }}
+                  className={`border border-zinc-200 bg-white/80 backdrop-blur-md p-2 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center ${timeOfDay === 'night' ? 'ring-2 ring-blue-500' : ''}`}
+                >
+                  <span className="text-xl mb-1">🌙</span>
+                  <span className="text-xs font-medium text-[#1D1D1F]">Night</span>
+                </button>
+                <button 
+                  onClick={() => setIsResetModalOpen(true)}
+                  className="border border-zinc-200 bg-white/80 backdrop-blur-md p-2 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center"
+                >
+                  <span className="text-xl mb-1">🔄</span>
+                  <span className="text-xs font-medium text-[#1D1D1F]">Reset</span>
+                </button>
+                <button 
+                  onClick={() => {
+                    setTempSettings(settings);
+                    setIsSettingsModalOpen(true);
+                  }}
+                  className="border border-zinc-200 bg-white/80 backdrop-blur-md p-2 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center"
+                >
+                  <span className="text-xl mb-1">⚙️</span>
+                  <span className="text-xs font-medium text-[#1D1D1F]">Setting</span>
+                </button>
+                <button 
+                  onClick={() => setIsAboutModalOpen(true)}
+                  className="border border-zinc-200 bg-white/80 backdrop-blur-md p-2 rounded-xl text-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center justify-center"
+                >
+                  <span className="text-xl mb-1">ℹ️</span>
+                  <span className="text-xs font-medium text-[#1D1D1F]">About</span>
+                </button>
+              </div>
+              
+              {isManual && (
+                <div className="flex justify-center">
+                  <button 
+                    onClick={() => setIsManual(false)}
+                    className="text-xs text-blue-600 font-medium hover:underline flex items-center gap-1 cursor-pointer"
+                  >
+                    Reset to Automatic Time
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      );
       default: return null;
     }
   };
@@ -416,12 +459,12 @@ function ReorderItem({ id, sound, onToggleMaximize, isMaximized }: { id: string,
   return (
     <Reorder.Item 
       value={id} 
-      dragControls={controls} 
+      dragControls={dragControls} 
       dragListener={false}
       className="w-full flex items-start gap-2 max-w-3xl mx-auto"
     >
       <div 
-        onPointerDown={(e) => controls.start(e)} 
+        onPointerDown={(e) => dragControls.start(e)} 
         className="cursor-grab p-1.5 bg-white/90 backdrop-blur-sm border border-zinc-200 rounded-full shadow-sm hover:shadow-md transition-all duration-300 z-20 mt-9 h-fit"
         title="Drag to reorder"
       >

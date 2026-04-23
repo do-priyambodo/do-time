@@ -74,7 +74,7 @@ export default function Stopwatch({ onToggleMaximize, isMaximized }: { onToggleM
             </button>
           )}
           
-          <div className={`font-bold tracking-tighter text-[#1D1D1F] font-mono ${isMaximized ? 'text-[8rem] sm:text-[12rem]' : 'text-6xl'}`}>
+          <div className={`font-bold tracking-tighter text-[#1D1D1F] font-mono ${isMaximized ? 'text-[5rem] sm:text-[8rem]' : 'text-6xl'}`}>
             {formatTime(time)}
           </div>
 
