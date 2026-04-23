@@ -18,3 +18,7 @@ web/*.tsbuildinfo
 web/next-env.d.ts
 web/npm-debug.log*
 web/*.pem
+
+# Mobile (Flutter SDK) specific ignores
+mobile/development/
+

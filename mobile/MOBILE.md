@@ -28,7 +28,7 @@ To install Flutter directly from your terminal without browsing, follow these st
 
 1.  **Create a development folder**:
     ```bash
-    mkdir -p ~/development
+    mkdir -p /usr/local/google/home/priyambodo/Coding/DO-PRIYAMBODO/do-time/mobile/development
     ```
 2.  **Download the Flutter SDK**:
     ```bash
@@ -36,12 +36,12 @@ To install Flutter directly from your terminal without browsing, follow these st
     ```
 3.  **Extract the SDK**:
     ```bash
-    tar xf flutter_linux_3.41.6-stable.tar.xz -C ~/development
+    tar xf flutter_linux_3.41.6-stable.tar.xz -C /usr/local/google/home/priyambodo/Coding/DO-PRIYAMBODO/do-time/mobile/development
     ```
 4.  **Add to PATH (Permanent)**:
     Run this command to add Flutter to your PATH permanently:
     ```bash
-    echo 'export PATH="$PATH:$HOME/development/flutter/bin"' >> ~/.bashrc
+    echo 'export PATH="$PATH:/usr/local/google/home/priyambodo/Coding/DO-PRIYAMBODO/do-time/mobile/development/flutter/bin"' >> ~/.bashrc
     ```
     Then apply the changes to your current session:
     ```bash
