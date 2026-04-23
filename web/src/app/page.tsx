@@ -17,7 +17,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-const INITIAL_ORDER = ['zone', 'alarm', 'pomodoro', 'timer', 'stopwatch'];
+const INITIAL_ORDER = ['zone', 'alarm', 'timer', 'stopwatch'];
 
 export default function Home() {
   const [isControlsCollapsed, setIsControlsCollapsed] = useState(false);
@@ -49,7 +49,7 @@ export default function Home() {
       setMounted(true);
       const savedOrder = localStorage.getItem('do-time-order');
       if (savedOrder) {
-        const parsedOrder = JSON.parse(savedOrder);
+        const parsedOrder = JSON.parse(savedOrder).filter((item: string) => item !== 'pomodoro');
         // Ensure all items from INITIAL_ORDER are present
         const mergedOrder = [
           ...parsedOrder,
@@ -137,6 +137,8 @@ export default function Home() {
         </div>
         
         <Clock />
+        
+        <Pomodoro sound={settings.pomodoro} />
         
         {/* Reorderable Sections */}
         <Reorder.Group axis="y" values={order} onReorder={setOrder} className="w-full flex flex-col items-center space-y-4">
@@ -389,7 +391,6 @@ function ReorderItem({ id, sound }: { id: string, sound?: string }) {
   const renderComponent = () => {
     switch (id) {
       case 'zone': return <ZoneComparison />;
-      case 'pomodoro': return <Pomodoro sound={sound} />;
       case 'alarm': return <Alarm sound={sound} />;
       case 'timer': return <Timer sound={sound} />;
       case 'stopwatch': return <Stopwatch />;
