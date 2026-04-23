@@ -38,7 +38,7 @@ export default function Clock({ onToggleMaximize, isMaximized }: { onToggleMaxim
   const seconds = time.getSeconds().toString().padStart(2, '0');
 
   return (
-    <div className={`border border-zinc-200 bg-white/80 backdrop-blur-xl rounded-3xl flex flex-col items-center justify-center space-y-8 shadow-lg relative ${isMaximized ? 'max-w-5xl w-full p-20 sm:p-32' : 'max-w-md w-full p-10'}`}>
+    <div className={`border border-zinc-200 bg-white/80 backdrop-blur-xl rounded-3xl flex flex-col items-center justify-center space-y-8 shadow-lg relative ${isMaximized ? 'max-w-5xl w-full p-20 sm:p-32' : 'max-w-md w-full mx-auto p-10'}`}>
       {onToggleMaximize && (
         <button 
           onClick={onToggleMaximize}

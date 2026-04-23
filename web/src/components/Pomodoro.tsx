@@ -126,7 +126,7 @@ export default function Pomodoro({ sound, onToggleMaximize, isMaximized }: { sou
   const progress = ((MODE_TIMES[mode] - timeLeft) / MODE_TIMES[mode]) * 100;
 
   return (
-    <div className={`w-full space-y-4 mt-8 ${isMaximized ? 'max-w-5xl' : 'max-w-2xl'}`}>
+    <div className={`w-full space-y-4 mt-8 mx-auto ${isMaximized ? 'max-w-5xl' : 'max-w-md'}`}>
       {!isMaximized && (
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
