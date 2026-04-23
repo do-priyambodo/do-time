@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Play, Pause, SkipForward, RotateCcw, Coffee, Brain, ChevronDown, ChevronUp } from 'lucide-react';
+import { Play, Pause, SkipForward, RotateCcw, Coffee, Brain, ChevronDown, ChevronUp, Maximize2, Minimize2 } from 'lucide-react';
 import { playChime, stopChime } from '@/lib/utils';
 import {
   Dialog,
@@ -18,7 +18,7 @@ const MODE_TIMES = {
   longBreak: 15 * 60,
 };
 
-export default function Pomodoro({ sound }: { sound?: string }) {
+export default function Pomodoro({ sound, onToggleMaximize, isMaximized }: { sound?: string, onToggleMaximize?: () => void, isMaximized?: boolean }) {
   const [mode, setMode] = useState<PomodoroMode>('focus');
   const [timeLeft, setTimeLeft] = useState(MODE_TIMES[mode]);
   const [isActive, setIsActive] = useState(false);
@@ -136,6 +136,15 @@ export default function Pomodoro({ sound }: { sound?: string }) {
           >
             {isCollapsed ? <ChevronDown className="w-5 h-5" /> : <ChevronUp className="w-5 h-5" />}
           </button>
+          {onToggleMaximize && (
+            <button 
+              onClick={onToggleMaximize}
+              className="text-zinc-400 hover:text-zinc-600 transition-colors ml-1"
+              title={isMaximized ? "Minimize" : "Maximize"}
+            >
+              {isMaximized ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+            </button>
+          )}
           <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${getModeColor()}`}>
             {mode === 'focus' ? <Brain className="w-3 h-3" /> : <Coffee className="w-3 h-3" />}
             <span className="capitalize">{mode.replace('Break', ' Break')}</span>

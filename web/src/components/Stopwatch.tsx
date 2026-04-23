@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Play, Pause, RotateCcw, Flag, ChevronDown, ChevronUp } from 'lucide-react';
+import { Play, Pause, RotateCcw, Flag, ChevronDown, ChevronUp, Maximize2, Minimize2 } from 'lucide-react';
 
-export default function Stopwatch() {
+export default function Stopwatch({ onToggleMaximize, isMaximized }: { onToggleMaximize?: () => void, isMaximized?: boolean }) {
   const [time, setTime] = useState(0); // in milliseconds
   const [isRunning, setIsRunning] = useState(false);
   const [laps, setLaps] = useState<number[]>([]);
@@ -48,6 +48,15 @@ export default function Stopwatch() {
           >
             {isCollapsed ? <ChevronDown className="w-5 h-5" /> : <ChevronUp className="w-5 h-5" />}
           </button>
+          {onToggleMaximize && (
+            <button 
+              onClick={onToggleMaximize}
+              className="text-zinc-400 hover:text-zinc-600 transition-colors ml-1"
+              title={isMaximized ? "Minimize" : "Maximize"}
+            >
+              {isMaximized ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+            </button>
+          )}
         </div>
       </div>
 

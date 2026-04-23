@@ -34,6 +34,7 @@ export default function Home() {
     pomodoro: '/iphone_alarm.mp3',
   });
   const [tempSettings, setTempSettings] = useState(settings);
+  const [maximizedModule, setMaximizedModule] = useState<string | null>(null);
 
   const handleReset = () => {
     localStorage.removeItem('do-time-alarms');
@@ -136,16 +137,27 @@ export default function Home() {
           </p>
         </div>
         
-        <Clock />
-        
-        <Pomodoro sound={settings.pomodoro} />
-        
-        {/* Reorderable Sections */}
-        <Reorder.Group axis="y" values={order} onReorder={setOrder} className="w-full flex flex-col items-center space-y-4">
-          {order.map((id) => (
-            <ReorderItem key={id} id={id} sound={settings[id as keyof typeof settings]} />
-          ))}
-        </Reorder.Group>
+        {maximizedModule === null ? (
+          <>
+            <Clock onToggleMaximize={() => setMaximizedModule('clock')} isMaximized={false} />
+            
+            <Pomodoro sound={settings.pomodoro} onToggleMaximize={() => setMaximizedModule(maximizedModule === 'pomodoro' ? null : 'pomodoro')} isMaximized={maximizedModule === 'pomodoro'} />
+            
+            {/* Reorderable Sections */}
+            <Reorder.Group axis="y" values={order} onReorder={setOrder} className="w-full flex flex-col items-center space-y-4">
+              {order.map((id) => (
+                <ReorderItem key={id} id={id} sound={settings[id as keyof typeof settings]} onToggleMaximize={() => setMaximizedModule(maximizedModule === id ? null : id)} isMaximized={maximizedModule === id} />
+              ))}
+            </Reorder.Group>
+          </>
+        ) : (
+          <div className="w-full flex flex-col items-center justify-center max-w-2xl mx-auto space-y-4 mt-8">
+            {maximizedModule === 'clock' && <Clock onToggleMaximize={() => setMaximizedModule(null)} isMaximized />}
+            {maximizedModule === 'pomodoro' && <Pomodoro sound={settings.pomodoro} onToggleMaximize={() => setMaximizedModule(null)} isMaximized />}
+            {maximizedModule === 'timer' && <Timer sound={settings.timer} onToggleMaximize={() => setMaximizedModule(null)} isMaximized />}
+            {maximizedModule === 'stopwatch' && <Stopwatch onToggleMaximize={() => setMaximizedModule(null)} isMaximized />}
+          </div>
+        )}
         
         {/* Minimalist Controls */}
         <div className="w-full max-w-2xl space-y-4 mt-8">
@@ -385,15 +397,15 @@ export default function Home() {
   );
 }
 
-function ReorderItem({ id, sound }: { id: string, sound?: string }) {
+function ReorderItem({ id, sound, onToggleMaximize, isMaximized }: { id: string, sound?: string, onToggleMaximize: () => void, isMaximized: boolean }) {
   const controls = useDragControls();
   
   const renderComponent = () => {
     switch (id) {
       case 'zone': return <ZoneComparison />;
       case 'alarm': return <Alarm sound={sound} />;
-      case 'timer': return <Timer sound={sound} />;
-      case 'stopwatch': return <Stopwatch />;
+      case 'timer': return <Timer sound={sound} onToggleMaximize={onToggleMaximize} isMaximized={isMaximized} />;
+      case 'stopwatch': return <Stopwatch onToggleMaximize={onToggleMaximize} isMaximized={isMaximized} />;
       default: return null;
     }
   };

@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react';
 
-export default function Clock() {
+import { Maximize2, Minimize2 } from 'lucide-react';
+
+export default function Clock({ onToggleMaximize, isMaximized }: { onToggleMaximize?: () => void, isMaximized?: boolean }) {
   const [time, setTime] = useState(new Date());
   const [mounted, setMounted] = useState(false);
 
@@ -36,7 +38,16 @@ export default function Clock() {
   const seconds = time.getSeconds().toString().padStart(2, '0');
 
   return (
-    <div className="border border-zinc-200 bg-white/80 backdrop-blur-xl p-10 rounded-3xl flex flex-col items-center justify-center space-y-4 max-w-md w-full shadow-lg">
+    <div className="border border-zinc-200 bg-white/80 backdrop-blur-xl p-10 rounded-3xl flex flex-col items-center justify-center space-y-4 max-w-md w-full shadow-lg relative">
+      {onToggleMaximize && (
+        <button 
+          onClick={onToggleMaximize}
+          className="absolute top-4 right-4 p-1 text-zinc-400 hover:text-zinc-600 transition-colors cursor-pointer"
+          title={isMaximized ? "Minimize" : "Maximize"}
+        >
+          {isMaximized ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
+        </button>
+      )}
       <div className="text-7xl font-bold tracking-tighter text-[#1D1D1F] font-mono">
         {hours}:{minutes}:{seconds}
       </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Play, Pause, RotateCcw, ChevronDown, ChevronUp } from 'lucide-react';
+import { Play, Pause, RotateCcw, ChevronDown, ChevronUp, Maximize2, Minimize2 } from 'lucide-react';
 import { playChime, stopChime } from "@/lib/utils";
 import {
   Dialog,
@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-export default function Timer({ sound }: { sound?: string }) {
+export default function Timer({ sound, onToggleMaximize, isMaximized }: { sound?: string, onToggleMaximize?: () => void, isMaximized?: boolean }) {
   const [timeLeft, setTimeLeft] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -91,6 +91,15 @@ export default function Timer({ sound }: { sound?: string }) {
           >
             {isCollapsed ? <ChevronDown className="w-5 h-5" /> : <ChevronUp className="w-5 h-5" />}
           </button>
+          {onToggleMaximize && (
+            <button 
+              onClick={onToggleMaximize}
+              className="text-zinc-400 hover:text-zinc-600 transition-colors ml-1"
+              title={isMaximized ? "Minimize" : "Maximize"}
+            >
+              {isMaximized ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+            </button>
+          )}
         </div>
       </div>
 
