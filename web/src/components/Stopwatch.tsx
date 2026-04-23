@@ -38,32 +38,43 @@ export default function Stopwatch({ onToggleMaximize, isMaximized }: { onToggleM
   };
 
   return (
-    <div className="w-full max-w-2xl space-y-4 mt-8">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <h2 className="text-xl font-bold tracking-tight">Stopwatch</h2>
-          <button 
-            onClick={() => setIsCollapsed(!isCollapsed)} 
-            className="text-zinc-400 hover:text-zinc-600 transition-colors"
-          >
-            {isCollapsed ? <ChevronDown className="w-5 h-5" /> : <ChevronUp className="w-5 h-5" />}
-          </button>
-          {onToggleMaximize && (
+    <div className={`w-full space-y-4 mt-8 ${isMaximized ? 'max-w-5xl' : 'max-w-2xl'}`}>
+      {!isMaximized && (
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <h2 className="text-xl font-bold tracking-tight">Stopwatch</h2>
             <button 
-              onClick={onToggleMaximize}
-              className="text-zinc-400 hover:text-zinc-600 transition-colors ml-1"
-              title={isMaximized ? "Minimize" : "Maximize"}
+              onClick={() => setIsCollapsed(!isCollapsed)} 
+              className="text-zinc-400 hover:text-zinc-600 transition-colors"
             >
-              {isMaximized ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+              {isCollapsed ? <ChevronDown className="w-5 h-5" /> : <ChevronUp className="w-5 h-5" />}
             </button>
-          )}
+            {onToggleMaximize && (
+              <button 
+                onClick={onToggleMaximize}
+                className="text-zinc-400 hover:text-zinc-600 transition-colors ml-1"
+                title={isMaximized ? "Minimize" : "Maximize"}
+              >
+                {isMaximized ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {!isCollapsed && (
-        <div className="border border-zinc-200 bg-white/80 backdrop-blur-md p-6 rounded-2xl flex flex-col items-center justify-center space-y-6 shadow-sm hover:shadow-md transition-all duration-300">
+        <div className={`border border-zinc-200 bg-white/80 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center space-y-8 shadow-sm hover:shadow-md transition-all duration-300 relative ${isMaximized ? 'p-20 sm:p-32' : 'p-6'}`}>
+          {isMaximized && onToggleMaximize && (
+            <button 
+              onClick={onToggleMaximize}
+              className="absolute top-6 right-6 p-2 text-zinc-400 hover:text-zinc-600 transition-colors cursor-pointer"
+              title="Minimize"
+            >
+              <Minimize2 className="w-6 h-6" />
+            </button>
+          )}
           
-          <div className="text-6xl font-bold tracking-tighter text-[#1D1D1F] font-mono">
+          <div className={`font-bold tracking-tighter text-[#1D1D1F] font-mono ${isMaximized ? 'text-[8rem] sm:text-[12rem]' : 'text-6xl'}`}>
             {formatTime(time)}
           </div>
 

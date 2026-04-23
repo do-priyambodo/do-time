@@ -128,14 +128,16 @@ export default function Home() {
       <div className={`absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent ${isNight ? 'via-zinc-700' : 'via-zinc-300'} to-transparent`}></div>
       
       <main className="relative z-10 flex flex-col items-center justify-center space-y-12 w-full max-w-4xl px-4">
-        <div className="text-center space-y-2">
-          <h1 className={`text-5xl font-bold tracking-tight sm:text-6xl ${isNight ? 'text-white' : 'text-[#1D1D1F]'}`}>
-            do-time
-          </h1>
-          <p className={`${isNight ? 'text-zinc-400' : 'text-zinc-600'} text-lg font-medium`}>
-            Engineered for focus.
-          </p>
-        </div>
+        {maximizedModule === null && (
+          <div className="text-center space-y-2">
+            <h1 className={`text-5xl font-bold tracking-tight sm:text-6xl ${isNight ? 'text-white' : 'text-[#1D1D1F]'}`}>
+              do-time
+            </h1>
+            <p className={`${isNight ? 'text-zinc-400' : 'text-zinc-600'} text-lg font-medium`}>
+              Engineered for focus.
+            </p>
+          </div>
+        )}
         
         {maximizedModule === null ? (
           <>
@@ -159,8 +161,8 @@ export default function Home() {
           </div>
         )}
         
-        {/* Minimalist Controls */}
-        <div className="w-full max-w-2xl space-y-4 mt-8">
+        {maximizedModule === null && (
+          <div className="w-full max-w-2xl space-y-4 mt-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <h2 className={`text-xl font-bold tracking-tight ${isNight ? 'text-white' : 'text-[#1D1D1F]'}`}>Controls</h2>
@@ -242,7 +244,8 @@ export default function Home() {
               )}
             </div>
           )}
-        </div>
+          </div>
+        )}
         {/* Reset Confirmation Modal */}
         <Dialog open={isResetModalOpen} onOpenChange={setIsResetModalOpen}>
           <DialogContent className="bg-white/90 backdrop-blur-2xl border-zinc-200 w-[95%] max-w-md rounded-3xl text-[#1D1D1F] p-6 sm:p-8 flex flex-col items-center space-y-6">
