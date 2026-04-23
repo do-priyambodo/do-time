@@ -52,6 +52,19 @@ To install Flutter directly from your terminal without browsing, follow these st
     flutter doctor
     ```
 
+    Expected successful output:
+    ```bash
+    Doctor summary (to see all details, run flutter doctor -v):
+    [✓] Flutter (Channel stable, 3.41.6, on Debian GNU/Linux rodete 6.18.14-1rodete3-amd64, locale en_US.UTF-8)
+    [✓] Android toolchain - develop for Android devices (Android SDK version 34.0.0)
+    [✓] Chrome - develop for the web
+    [✓] Linux toolchain - develop for Linux desktop
+    [✓] Connected device (2 available)
+    [✓] Network resources
+
+    • No issues found!
+    ```
+
 ### 🛠️ Fixing Missing Dependencies
 
 If `flutter doctor` reports missing tools, follow these steps:
@@ -67,6 +80,37 @@ sudo apt update && sudo apt install -y clang cmake ninja-build libgtk-3-dev
 3.  Accept Android licenses by running:
     ```bash
     flutter doctor --android-licenses
+    ```
+
+**For Headless / SSH Installations (No GUI):**
+If you are connecting via remote SSH and cannot access Android Studio's GUI, install the SDK tools via terminal:
+1.  **Create the required directories**:
+    ```bash
+    mkdir -p ~/Android/Sdk/cmdline-tools
+    cd ~/Android/Sdk/cmdline-tools
+    ```
+2.  **Download and unzip the Linux Command Line Tools**:
+    ```bash
+    curl -O https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+    unzip commandlinetools-linux-11076708_latest.zip
+    ```
+3.  **Structure the folder correctly (Required by Flutter)**:
+    ```bash
+    mkdir latest
+    mv cmdline-tools/bin cmdline-tools/lib cmdline-tools/source.properties latest/
+    rm -rf cmdline-tools
+    ```
+4.  **Install the Android Platform and Build Tools**:
+    ```bash
+    ./latest/bin/sdkmanager --sdk_root=/usr/local/google/home/priyambodo/Android/Sdk "platform-tools" "platforms;android-36" "build-tools;28.0.3"
+    ```
+5.  **Accept the Android Licenses**:
+    ```bash
+    ./latest/bin/sdkmanager --sdk_root=/usr/local/google/home/priyambodo/Android/Sdk --licenses
+    ```
+6.  **Tell Flutter where the SDK is located**:
+    ```bash
+    flutter config --android-sdk /usr/local/google/home/priyambodo/Android/Sdk
     ```
 
 ---
@@ -87,7 +131,21 @@ Run the following command in your terminal (outside the `web` folder):
 flutter create mobile_app
 ```
 
-### Phase 3: Building the Core Features
+```
+
+### Phase 3: Previewing the App (Headless / Remote SSH)
+To view the Flutter application in your local browser when connected over SSH:
+1. Go into the Flutter project directory:
+   ```bash
+   cd mobile/mobile_app
+   ```
+2. Run the app using the headless web-server device:
+   ```bash
+   flutter run -d web-server --web-port 8080
+   ```
+3. Open your browser and navigate to the server URL (port 8080).
+
+### Phase 4: Building the Core Features
 You will recreate the modules we built in the web app:
 *   **Themes**: Use Flutter's `ThemeData` or custom container gradients for Sunrise, Noon, Sunset, and Night.
 *   **Pomodoro**: Use a `Timer` class in Dart to handle the countdown.
