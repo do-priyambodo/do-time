@@ -126,52 +126,52 @@ export default function Pomodoro({ sound, onToggleMaximize, isMaximized }: { sou
   const progress = ((MODE_TIMES[mode] - timeLeft) / MODE_TIMES[mode]) * 100;
 
   return (
-    <div className={`w-full space-y-4 mt-8 mx-auto ${isMaximized ? 'max-w-5xl' : 'max-w-md'}`}>
-      {!isMaximized && (
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <h2 className="text-xl font-bold tracking-tight">Pomodoro</h2>
+    <div className={`w-full space-y-4 mx-auto ${isMaximized ? 'max-w-3xl mt-2' : 'max-w-md mt-8'}`}>
+      <div className="flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <h2 className="text-xl font-bold tracking-tight">Pomodoro</h2>
+          {!isMaximized && (
             <button 
               onClick={() => setIsCollapsed(!isCollapsed)} 
               className="text-zinc-400 hover:text-zinc-600 transition-colors"
             >
               {isCollapsed ? <ChevronDown className="w-5 h-5" /> : <ChevronUp className="w-5 h-5" />}
             </button>
-            {onToggleMaximize && (
-              <button 
-                onClick={onToggleMaximize}
-                className="text-zinc-400 hover:text-zinc-600 transition-colors ml-1"
-                title={isMaximized ? "Minimize" : "Maximize"}
-              >
-                {isMaximized ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
-              </button>
-            )}
-            <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${getModeColor()}`}>
-              {mode === 'focus' ? <Brain className="w-3 h-3" /> : <Coffee className="w-3 h-3" />}
-              <span className="capitalize">{mode.replace('Break', ' Break')}</span>
-            </div>
-          </div>
-          
-          <div className="text-sm text-zinc-500 font-medium">
-            Sessions: {sessionsCompleted}
+          )}
+          {onToggleMaximize && (
+            <button 
+              onClick={onToggleMaximize}
+              className="text-zinc-400 hover:text-zinc-600 transition-colors ml-1"
+              title={isMaximized ? "Show all do-time modules" : "Maximize"}
+            >
+              {isMaximized ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+            </button>
+          )}
+          <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${getModeColor()}`}>
+            {mode === 'focus' ? <Brain className="w-3 h-3" /> : <Coffee className="w-3 h-3" />}
+            <span className="capitalize">{mode.replace('Break', ' Break')}</span>
           </div>
         </div>
-      )}
+        
+        <div className="text-sm text-zinc-500 font-medium">
+          Sessions: {sessionsCompleted}
+        </div>
+      </div>
 
       {!isCollapsed && (
-        <div className={`bg-white/80 backdrop-blur-md border border-zinc-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 relative ${isMaximized ? 'p-20 sm:p-32 space-y-8' : 'p-6 space-y-4'}`}>
+        <div className={`bg-white/80 backdrop-blur-md border border-zinc-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 relative ${isMaximized ? 'p-10 sm:p-16 space-y-6' : 'p-6 space-y-4'}`}>
           {isMaximized && onToggleMaximize && (
             <button 
               onClick={onToggleMaximize}
               className="absolute top-6 right-6 p-2 text-zinc-400 hover:text-zinc-600 transition-colors cursor-pointer"
-              title="Minimize"
+              title="Show all do-time modules"
             >
-              <Minimize2 className="w-6 h-6" />
+              <Minimize2 className="w-5 h-5" />
             </button>
           )}
-          <div className="flex flex-col items-center justify-center py-6 space-y-4">
+          <div className="flex flex-col items-center justify-center py-4 space-y-4">
             {/* Timer Display */}
-            <div className={`font-bold font-mono text-[#1D1D1F] tracking-tighter ${isMaximized ? 'text-[8rem] sm:text-[12rem]' : 'text-6xl'}`}>
+            <div className={`font-bold font-mono text-[#1D1D1F] tracking-tighter ${isMaximized ? 'text-7xl sm:text-9xl' : 'text-6xl'}`}>
           {formatTime(timeLeft)}
         </div>
 

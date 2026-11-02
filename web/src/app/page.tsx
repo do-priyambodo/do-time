@@ -63,6 +63,18 @@ export default function Home() {
         setSettings(JSON.parse(savedSettings));
       }
 
+      const params = new URLSearchParams(window.location.search);
+      const moduleParam = params.get('module');
+      const validModules = ['clock', 'pomodoro', 'timer', 'stopwatch'];
+      if (moduleParam && validModules.includes(moduleParam)) {
+        setMaximizedModule(moduleParam);
+      } else if (window.location.hash) {
+        const hashModule = window.location.hash.replace('#', '');
+        if (validModules.includes(hashModule)) {
+          setMaximizedModule(hashModule);
+        }
+      }
+
       const updateBackground = () => {
         if (isManual) return; // Skip automatic updates if user manually selected a theme
         const hour = new Date().getHours();
