@@ -22,3 +22,9 @@ web/*.pem
 # Mobile (Flutter SDK) specific ignores
 mobile/development/
 
+# DO-HARNESS local verification state
+.harness/
+!.harness/real-data-baseline.txt
+!.harness/own-domains.txt
+
+
